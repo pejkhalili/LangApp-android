@@ -310,7 +310,6 @@ class Hub : AppCompatActivity(), View.OnClickListener, NavigationView.OnNavigati
             }
 
             R.id.hub_wrongs ->{
-
                 var intent = Intent(this, Review::class.java)
                 startActivity(intent)
             }

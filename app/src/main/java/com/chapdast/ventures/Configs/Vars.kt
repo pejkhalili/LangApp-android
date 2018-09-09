@@ -64,6 +64,7 @@ fun LevelSelector(context: Context, level: Int): String {
 }
 
 fun CountDowner(v: TextView, time: Int,hide: Boolean = false): CountDownTimer {
+    v.visibility = View.GONE
     v.visibility = View.VISIBLE
     var input = time.toLong() * 1000
 

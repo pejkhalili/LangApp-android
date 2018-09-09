@@ -405,8 +405,6 @@ class Review : AppCompatActivity(), TextToSpeech.OnInitListener {
                     } catch (E: JSONException) {
 
                     }
-                } else {
-                    End()
                 }
 
             } else {
