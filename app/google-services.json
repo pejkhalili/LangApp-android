@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "633770527821",
+    "firebase_url": "https://hellogram-746b4.firebaseio.com",
+    "project_id": "hellogram-746b4",
+    "storage_bucket": "hellogram-746b4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:633770527821:android:54c49f4d2289862f",
+        "android_client_info": {
+          "package_name": "com.chapdast.ventures"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "633770527821-qbsvr263uekkvapqmd2uthgqokphbp1g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7yu6Om6d3P8IzGX92uCh8VvHkzX2I3ro"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

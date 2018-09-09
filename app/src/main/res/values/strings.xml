@@ -1,0 +1,108 @@
+<resources>
+    <string name="app_name">Hellogram</string>
+    <string name="num_pat">مانند09123456789 </string>
+    <string name="please_enter_your_number">شماره موبایل خودت رو وارد کن</string>
+    <string name="we_sent_you_activition_code_enter_it_below">کد تایید الان برات ارسال میشه</string>
+    <string name="verfy_code_pat">_ _ _ _</string>
+    <string name="select_your_level">سطح مورد نظر خود را انتخاب نمایید</string>
+    <string name="elementary_level">سطح مبتدی</string>
+    <string name="intermediate_level">سطح متوسط</string>
+    <string name="advanced_level">سطح پیشرفته</string>
+    <string name="_504_essential_words">504 ESSENTIAL WORDS</string>
+    <string name="_1001_tofel_vocab">1001 TOFEL Vocab</string>
+    <string name="i_don_t_know">نمی دانم</string>
+    <string name="change_level">تغییر سطح</string>
+    <string name="right_answers">پاسخ های صحیح:</string>
+    <string name="wrong_answers">پاسخ های اشتباه</string>
+    <string name="number_of_question_on_each_quest">تعداد سوالات در هر روز</string>
+    <string name="desirable_time_for_each_question">زمان پاسخگویی به هر سوال</string>
+    <string name="choose_your_desire_video_to_watch">ویدیو مورد نظر را انتخاب کنید</string>
+    <string name="videos">ویدیو ها</string>
+    <string name="title_activity_quest_finish">QuestFinish</string>
+    <string name="sp_two_intro">اپلیکیشن هلوگرام با استفاده از  متد جعبه لایتنر به شما کمک میکنه تا با سادگی زبان انگلیسی رو یاد بگیرید و برای همیشه به خاطر بسپارید</string>
+    <string name="finished_quest">آزمون امروز را انجام داده اید.</string>
+    <string name="next_question">سوال بعد</string>
+    <string name="maxNums">بیشترین تعداد سوال در هر روز ۴۰ سوال و بیشترین زمان ۶۰ ثانیه است</string>
+    <string name="Set">ثبت</string>
+    <string name="regSMS"> کد عضویت شما اپ هلوگرام</string>
+    <string name="regSMSEnd"> میباشد.</string>
+
+
+    <string name="translate">ترجمه کن</string>
+    <string name="translateInputError">لطفا واژه ای وارد کنید</string>
+    <string name="en_to_fa">انگلیسی به فارسی</string>
+    <string name="fa_to_en">فارسی به انگلیسی</string>
+    <string name="no_server_connection">ارتباط با سرور برقرار نمی باشد</string>
+    <string name="try_again">تلاش مجدد</string>
+    <string name="checkConnection">در حال بررسی اتصال به سرور</string>
+    <string name="exit">برای خروج بازگشت را مجدد لمس کنید</string>
+    <string name="no_reviews">در حال حاضر سوالی برای مرور وجود ندارد</string>
+    <string name="podcasts_title">پادکست ها</string>
+    <string name="select_podcast_sutitle">پادکست مورد نظر خور را انتخاب کنید</string>
+    <string name="eula">شرایط استفاده</string>
+    <string name="unSub">لغو اشتراک</string>
+    <string name="about">درباره</string>
+    <string name="confirm">تایید</string>
+    <string name="unsub_r_u_sure">آیا از لغو اشتراک خود اطمینان دارید؟</string>
+    <string name="yes">بله</string>
+    <string name="no">خیر</string>
+    <string name="unSubSucces">حساب شما با موفقیت لغو شد</string>
+    <string name="wronganswers">مرور پاسخ های\nنادرست</string>
+    <string name="wrongAnswersOneLine">مرور پاسخ های نادرست</string>
+    <string name="selectlevel">انتخاب سطح</string>
+    <string name="userstatus">وضعیت</string>
+    <string name="onlinedic">دیکشنری آنلاین</string>
+    <string name="mediapage">چند رسانه ای ها</string>
+    <string name="levelsetting">تنظیمات آزمون</string>
+    <string name="word_to_translate">‌Word to Translate...</string>
+    <string name="selectPodcast">لطفا یک پادکست را انتخاب کنید</string>
+    <string name="title_activity_home">activity_home</string>
+    <string name="wrongNum">لطفا شماره موبایل را به درستی وارد کنید</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_dummy2">DUMMY2</string>
+    <string name="noQuestAvalable">آزمون های این سطح را انجام داده اید.\nلطفا مرور پاسخ های نادرست و یا سطح جدیدی را انتخاب نمایید</string>
+    <string name="noReviewAvalable">سوالی برای مرور وجود ندارد. \n بعد از آزمون برای مرور پاسخ های نادرست خود از این گزینه استفاده کنید</string>
+    <string name="user_stat_empty">برای مشاهده وضعیت باید حداقل\nیکبار آزمون را انجام داده باشید</string>
+    <string name="stopped">مکث</string>
+    <string name="started">شروع</string>
+    <string name="Main_page">صفحه اصلی</string>
+    <string name="you_finished_today_s_quest_well_done">شما آزمون امروز را به اتمام رسانیده اید.</string>
+    <string name="English">EN</string>
+    <string name="more_info">توضیحات بیشتر</string>
+    <string name="sp_three_price">روزانه ۵۰۰ تومان برای همراه اولی ها\n۴۸ ساعت رایگان برای ایرانسلی ها</string>
+    <string name="unSupportedNumber">در حال حاضر فقط دارندگان سیم کارت های همراه اول و یا ایرانسل امکان عضویت را دارند</string>
+    <string name="title_activity_profile">حساب کاربری</string>
+    <string name="uInfoName">نام</string>
+    <string name="uInfoUsername">نام کاربری</string>
+    <string name="uAccount">حساب کاربری</string>
+    <string name="unSet">تعیین نشده</string>
+    <string name="changeNumber">تغییر شماره</string>
+    <string name="code_not_match">کد وارد شده صحیح نمی باشد</string>
+    <string name="title_activity_media_loader">MediaLoader</string>
+    <string name="mediasTitle">رسانه های آموزشی</string>
+
+    <string name="pleaseWait">لطفا منتظر بمانید...</string>
+    <string name="selectFilter">دسته بندی</string>
+    <string name="enterYourName">نام خود را وارد کنید</string>
+    <string name="timeRemainToNextQuest">زمان باقی مانده تا آزمون بعدی</string>
+    <string name="setAnswerWait">در حال ثبت پاسخ لطفا منتظر باشید</string>
+    <string name="pleaseTryAgain">لطفا مجدد تلاش فرمایید</string>
+    <string name="name_has_set">نام با موفقیت تنظیم شد</string>
+    <string name="cantConnectToServer">عدم ارتباط با سرور\nلطفا مجدد تلاش فرمایید</string>
+    <string name="media_select">دسته بندی مورد نظر را انتخاب کنید</string>
+    <string name="media_all">همه</string>
+    <string name="EULA_TEXT">شما باید از کلیه خط مشی‌هایی که به واسطه سرویس‌ها در اختیار شما قرار گرفته است، پیروی کنید. از سرویس‌های ما سوء استفاده نکنید. بعنوان مثال از تداخل در سرویس‌های ما یا تلاش برای دسترسی به آنها با استفاده از روشی بجز رابط کاربری و دستورالعمل‌های ارایه شده توسط ما، خودداری کنید. شما می‌توانید از سرویس‌های ما فقط بگونه‌ مجاز شناخته شده توسط قانون، از جمله قوانین و مقررات قابل اجرا برای کنترل صادرات و واردات، استفاده کنید. در صورت عدم تبعیت شما از شرایط یا خط مشی‌های ما و یا در صورت مشکوک شدن به هرگونه سوء عملکرد، ما ممکن است ارایه سرویس‌ها به شما را متوقف کرده یا به حالت تعلیق در آوریم. استفاده از سرویس‌های ما سبب نمی‌شود که مالکیت هرکدام از داراییها و حقوق معنوی موجود در سرویس‌های ما یا محتواهایی که به آنها دسترسی دارید به شما تعلق بگیرد. شما امکان استفاده از محتوای سرویس‌های ما را ندارید، مگر اینکه دارنده آن سرویس‌ها به شما اجازه دهد یا بگونه‌ای دیگر بواسطه قانون مجاز به انجام این کار باشید. این شرایط به شما این حق را نمی‌دهند از مارک یا لوگوهای استفاده شده در این سرویس‌ها استفاده کنید. اعلامیه‌های حقوقی نمایش داده شده در سرویس‌های ما را حذف یا نامفهوم نکرده یا آنها را تغییر ندهید. سرویس‌های ما محتواهایی را به نمایش می‌گذارند که متعلق به Google نیست. مسئولیت این محتواها تنها بر عهده سازمانی است که آن را در اختیار افراد قرار داده است. ما ممکن است محتوا را مورد بازبینی قرار ‌دهیم تا تعیین کنیم که غیرقانونی نباشد یا اینکه خط مشی‌های ما را نقض نکند، همچنین در صورتی که یک محتوا بصورت منطقی خط مشی‌های ما یا قانون را نقض کند، آن را حذف کرده یا نمایش نمی‌دهیم. اما این امر لزوما به معنای این نیست که ما محتوا را بازبینی می‌کنیم، بنابراین لطفا تصور نکنید که ما این کار را انجام می‌دهیم. ما ممکن است اعلامیه‌های سرویس‌ها، پیامهای اجرایی و سایر اطلاعات را در ارتباط با استفاده شما از این “سرویس‌ها” برای شما ارسال کنیم. شما می‌توانید برخی از آن ارتباطات را لغو کنید. برخی از خدمات ما در ﺘﻠﻓﻦ‌های همراه در دسترس هستند. از این خدمات به نحوی استفاده نکنید که باعث پرت شدن حواس شما شوند و باعث شوند قوانین ترافیکی یا ایمنی را رعایت نکنید.</string>
+    <string name="back">بازگشت</string>
+    <string name="ABOUT_TEXT">سرویس‌های ما بسیار متنوع هستند، از این رو برخی مواقع شرایط اضافی یا شرایط خاص محصول (از جمله شرایط سنی) اعمال می‌شوند. شرایط اضافی با سرویس‌های مربوطه در دسترس خواهد بود و اگر از آن سرویس‌ها استفاده کنید، آن شرایط اضافی بخشی از قرارداد شما با ما می‌شود.</string>
+    <string name="speak_words">خواندن کلمات</string>
+
+    <string-array name="mediaTypes">
+        <item>همه</item>
+        <item>ویدئو</item>
+        <item>پادکست</item>
+    </string-array>
+
+</resources>
