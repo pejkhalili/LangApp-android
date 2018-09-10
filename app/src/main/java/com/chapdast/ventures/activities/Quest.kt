@@ -289,6 +289,7 @@ class Quest : AppCompatActivity(), OnInitListener {
 
             if (nwTrans.statusCode == 200) {
                 var res = nwTrans.jsonArray
+
                 var meaningList: Array<WordTransObject?> = arrayOfNulls(res.length())
                 for (i in 0..res.length() - 1) {
                     var row = res.get(i) as JSONObject
@@ -299,6 +300,7 @@ class Quest : AppCompatActivity(), OnInitListener {
                     )
                     )
                 }
+
                 Log.d("RESULT", wordToCheck + res.toString())
                 var adapter = listObjAdapter(applicationContext, meaningList)
 
@@ -450,7 +452,6 @@ class Quest : AppCompatActivity(), OnInitListener {
 
     inner class WordTransObject(type: String, meaning: String, eg: String) {
         var T = type
-
         var D = meaning
         var E = eg
     }

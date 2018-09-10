@@ -30,8 +30,9 @@
 
     <string name="translate">ترجمه کن</string>
     <string name="translateInputError">لطفا واژه ای وارد کنید</string>
-    <string name="en_to_fa">انگلیسی به فارسی</string>
-    <string name="fa_to_en">فارسی به انگلیسی</string>
+    <string name="en_to_fa">ترجمه انگلیسی به فارسی</string>
+    <string name="fa_to_en">ترجمه فارسی به انگلیسی</string>
+    <string name="english">تر جمه انگلیسی به انگلیسی</string>
     <string name="no_server_connection">ارتباط با سرور برقرار نمی باشد</string>
     <string name="try_again">تلاش مجدد</string>
     <string name="checkConnection">در حال بررسی اتصال به سرور</string>
@@ -70,7 +71,7 @@
     <string name="started">شروع</string>
     <string name="Main_page">صفحه اصلی</string>
     <string name="you_finished_today_s_quest_well_done">شما آزمون امروز را به اتمام رسانیده اید.</string>
-    <string name="English">EN</string>
+
     <string name="more_info">توضیحات بیشتر</string>
     <string name="sp_three_price">روزانه ۵۰۰ تومان برای همراه اولی ها\n۴۸ ساعت رایگان برای ایرانسلی ها</string>
     <string name="unSupportedNumber">در حال حاضر فقط دارندگان سیم کارت های همراه اول و یا ایرانسل امکان عضویت را دارند</string>
@@ -98,6 +99,7 @@
     <string name="back">بازگشت</string>
     <string name="ABOUT_TEXT">سرویس‌های ما بسیار متنوع هستند، از این رو برخی مواقع شرایط اضافی یا شرایط خاص محصول (از جمله شرایط سنی) اعمال می‌شوند. شرایط اضافی با سرویس‌های مربوطه در دسترس خواهد بود و اگر از آن سرویس‌ها استفاده کنید، آن شرایط اضافی بخشی از قرارداد شما با ما می‌شود.</string>
     <string name="speak_words">خواندن کلمات</string>
+    <string name="translator">مترجم</string>
 
     <string-array name="mediaTypes">
         <item>همه</item>

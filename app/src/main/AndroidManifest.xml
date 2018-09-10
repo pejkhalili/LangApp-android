@@ -128,7 +128,8 @@
         <activity
             android:name=".activities.EULA_Activity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.MediaCategories"></activity>
+        <activity android:name=".activities.MediaCategories" />
+        <activity android:name=".activities.Translation"></activity>
     </application>
 
 </manifest>

@@ -14,10 +14,9 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.widget.ImageView
-import android.widget.TextView
+import com.chapdast.ventures.Adapters.CategoriesAdapter
 import com.chapdast.ventures.Configs.*
-import com.chapdast.ventures.Media.*
+import com.chapdast.ventures.Objects.*
 import com.chapdast.ventures.R
 import kotlinx.android.synthetic.main.activity_media_categories.*
 import org.json.JSONObject

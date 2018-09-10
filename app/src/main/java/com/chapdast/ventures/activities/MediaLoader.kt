@@ -22,10 +22,10 @@ import android.widget.TextView
 import com.chapdast.ventures.*
 import com.chapdast.ventures.Configs.*
 
-import com.chapdast.ventures.Media.Media
-import com.chapdast.ventures.Media.MediaAdapter
-import com.chapdast.ventures.Media.Podcast
-import com.chapdast.ventures.Media.Video
+import com.chapdast.ventures.Objects.Media
+import com.chapdast.ventures.Adapters.MediaAdapter
+import com.chapdast.ventures.Objects.Podcast
+import com.chapdast.ventures.Objects.Video
 import kotlinx.android.synthetic.main.activity_media_loader.*
 import org.json.JSONObject
 import java.util.*

@@ -23,8 +23,8 @@ android {
         applicationId "com.chapdast.ventures"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 32
-        versionName "1.2.9-fr"
+        versionCode 34
+        versionName "1.2.10"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

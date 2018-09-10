@@ -296,7 +296,7 @@ class Hub : AppCompatActivity(), View.OnClickListener, NavigationView.OnNavigati
             }
 
             R.id.hub_online_dic ->{
-                var intent = Intent(this, OnlineDictionary::class.java)
+                var intent = Intent(this, Translation::class.java)
                 startActivity(intent)
             }
 
