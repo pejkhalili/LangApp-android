@@ -31,17 +31,21 @@
           <option name="moduleName" value="app_debug" />
           <option name="addCompilerBuiltIns" value="true" />
           <option name="loadBuiltInsFromDependencies" value="true" />
-          <option name="languageVersion" value="1.1" />
-          <option name="apiVersion" value="1.1" />
           <option name="pluginOptions">
             <array>
               <option value="plugin:org.jetbrains.kotlin.android:experimental=false" />
               <option value="plugin:org.jetbrains.kotlin.android:enabled=true" />
               <option value="plugin:org.jetbrains.kotlin.android:defaultCacheImplementation=hashMap" />
+              <option value="plugin:org.jetbrains.kotlin.android:package=com.chapdast.ventures" />
+              <option value="plugin:org.jetbrains.kotlin.android:variant=main;D:\ApkProjects\Ventures\app\src\main\res" />
+              <option value="plugin:org.jetbrains.kotlin.android:package=com.chapdast.ventures" />
+              <option value="plugin:org.jetbrains.kotlin.android:variant=main;D:\ApkProjects\Ventures\app\src\main\res" />
             </array>
           </option>
           <option name="pluginClasspaths">
             <array>
+              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-android-extensions/1.1.51/5c33f0c440fdd8416f77824bda078426c3f3dc94/kotlin-android-extensions-1.1.51.jar" />
+              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-android-extensions/1.1.51/5c33f0c440fdd8416f77824bda078426c3f3dc94/kotlin-android-extensions-1.1.51.jar" />
               <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-android-extensions/1.1.51/5c33f0c440fdd8416f77824bda078426c3f3dc94/kotlin-android-extensions-1.1.51.jar" />
             </array>
           </option>

@@ -22,6 +22,7 @@ public class TranslationObject {
 
     public TranslationObject(String word, JSONArray translation) {
         this.word = word.toUpperCase();
+
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < translation.length(); i++) {
             try {
@@ -34,7 +35,7 @@ public class TranslationObject {
                 Log.e("ERR-Mean", e.getMessage());
             }
         }
-        this.translation = sb.toString().substring(0,sb.length()-8);
+        this.translation = sb.length()>8 ? sb.toString().substring(0,sb.length()-8) : "No Translation" ;
 
     }
 
