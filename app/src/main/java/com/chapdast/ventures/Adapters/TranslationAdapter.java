@@ -58,7 +58,7 @@ public class TranslationAdapter extends RecyclerView.Adapter<TranslationAdapter.
 
         if( trObj.isRtl() ) {
             holder.v.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-            holder.translation.setTextSize(20F);
+            holder.translation.setTextSize(18F);
         }else holder.v.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         holder.translation.setTypeface(typeface);
         holder.word.setTypeface(typefaceBold);

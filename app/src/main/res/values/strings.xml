@@ -100,6 +100,8 @@
     <string name="ABOUT_TEXT">سرویس‌های ما بسیار متنوع هستند، از این رو برخی مواقع شرایط اضافی یا شرایط خاص محصول (از جمله شرایط سنی) اعمال می‌شوند. شرایط اضافی با سرویس‌های مربوطه در دسترس خواهد بود و اگر از آن سرویس‌ها استفاده کنید، آن شرایط اضافی بخشی از قرارداد شما با ما می‌شود.</string>
     <string name="speak_words">خواندن کلمات</string>
     <string name="translator">مترجم</string>
+    <string name="noTranslationFound_fa">ترجمه ای پیدا نشد</string>
+    <string name="noTranslationFound_en">No Translation</string>
 
     <string-array name="mediaTypes">
         <item>همه</item>

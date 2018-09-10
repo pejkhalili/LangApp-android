@@ -30,7 +30,8 @@ class Translation : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_translation)
-
+        ENV.current_context=applicationContext
+        ENV.current_activity= this
         if (!isNetworkAvailable(this)) {
             var noCon = Intent(this, NoConnection::class.java)
             startActivity(noCon)
@@ -103,10 +104,11 @@ class Translation : AppCompatActivity() {
             }
             false
         })
-
+        var current = 0
         trns_trans_btn.setOnClickListener {
             loadTrans()
             translationAdapter.notifyDataSetChanged()
+            translationRecyclerView.scrollToPosition(current++)
 
         }
 
