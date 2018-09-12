@@ -30,7 +30,7 @@ import org.json.JSONObject
 import java.util.*
 
 
-class Hub : AppCompatActivity(), View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
+class Hub : ChapActivity(), View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
 
     lateinit var mHelper: IabHelper
     var payloadJoob=""
@@ -169,57 +169,37 @@ class Hub : AppCompatActivity(), View.OnClickListener, NavigationView.OnNavigati
         return true
     }
     var first_time:Boolean=false
-    var iransans:Typeface?=null
-    var iranBlack:Typeface?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        if (ChapActivity.netCheck(this)) {
+            setContentView(R.layout.activity_home)
 
 
-        CharkhoneSdkApp.initSdk(applicationContext,getSecrets(),true, R.mipmap.icon)
-        mHelper = IabHelper(applicationContext, RSA_KEY)
-        mHelper.startSetup(PayIabListener())
+            CharkhoneSdkApp.initSdk(applicationContext, getSecrets(), true, R.mipmap.icon)
+            mHelper = IabHelper(applicationContext, RSA_KEY)
+            mHelper.startSetup(PayIabListener())
 
-        hub_api.setOnClickListener {
-            sToast(applicationContext, getString(R.string.timeRemainToNextQuest), true)
-        }
-
-
-        setSupportActionBar(toolbar)
-        supportActionBar!!.hide()
-        val toggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close)
-
-        drawer_layout.addDrawerListener(toggle)
-
-        toggle.syncState()
-
-
-        nav_view.setNavigationItemSelectedListener(this)
-
-
-
-        //check Internet Connection
-        var net = isNetworkAvailable(this)
-
-        if (!net) {
-                var noCon = Intent(this, NoConnection::class.java)
-                startActivity(noCon)
-                finish()
+            hub_api.setOnClickListener {
+                sToast(applicationContext, getString(R.string.timeRemainToNextQuest), true)
             }
 
-        //check Internet Connection
-        else {
+
+            setSupportActionBar(toolbar)
+            supportActionBar!!.hide()
+            val toggle = ActionBarDrawerToggle(
+                    this, drawer_layout, toolbar,
+                    R.string.navigation_drawer_open,
+                    R.string.navigation_drawer_close)
+            drawer_layout.addDrawerListener(toggle)
+            toggle.syncState()
+
+            nav_view.setNavigationItemSelectedListener(this)
+
             val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
-            var assetManager = applicationContext.assets
-            iransans = Typeface.createFromAsset(assetManager, String.format(Locale.ENGLISH, "fonts/%s", "iransans.ttf"))
-            iranBlack = Typeface.createFromAsset(assetManager, String.format(Locale.ENGLISH, "fonts/%s", "iranblack.ttf"))
             val userId = SPref(this, "userCreds")?.getString("userId", null)
-            Log.d("MK-User","UserID -->>>" + userId.toString())
+            Log.d("MK-User", "UserID -->>>" + userId.toString())
             var level = SPref(this, "level")?.getInt("level", 0)
 
             UpdateNavDrawer(userId)
@@ -227,9 +207,9 @@ class Hub : AppCompatActivity(), View.OnClickListener, NavigationView.OnNavigati
 
             hub_side_menu.setOnClickListener {
                 drawer_layout.openDrawer(Gravity.START)
-                Log.d("toggle",1.toString())
+                Log.d("toggle", 1.toString())
             }
-            hub_current_level.typeface =iransans
+            hub_current_level.typeface = HelloApp.IRANSANS
             hub_current_level.text = LevelSelector(applicationContext, level!!)
             hub_start.setOnClickListener(this)
             hub_level_select.setOnClickListener(this)
@@ -238,16 +218,15 @@ class Hub : AppCompatActivity(), View.OnClickListener, NavigationView.OnNavigati
             hub_status.setOnClickListener(this)
             hub_videos.setOnClickListener(this)
             hub_wrongs.setOnClickListener(this)
-            HUB_Level_Setting.typeface  = iranBlack
-            HUB_Media.typeface          = iranBlack
-            HUB_OnlineDic.typeface      = iranBlack
-            HUB_lvlSet.typeface         = iranBlack
-            HUB_userStat.typeface       = iranBlack
-            HUB_wrongAns.typeface       = iranBlack
+            HUB_Level_Setting.typeface = HelloApp.IRANSANS_BLACK
+            HUB_Media.typeface = HelloApp.IRANSANS_BLACK
+            HUB_OnlineDic.typeface = HelloApp.IRANSANS_BLACK
+            HUB_lvlSet.typeface = HelloApp.IRANSANS_BLACK
+            HUB_userStat.typeface = HelloApp.IRANSANS_BLACK
+            HUB_wrongAns.typeface = HelloApp.IRANSANS_BLACK
 
         }
     }
-
     fun UpdateNavDrawer(userId:String?){
         var nv = findViewById<NavigationView>(R.id.nav_view)
         var hv = nv.getHeaderView(0)
@@ -257,10 +236,10 @@ class Hub : AppCompatActivity(), View.OnClickListener, NavigationView.OnNavigati
         var about= hv.findViewById<TextView>(R.id.drHead_about)
         var eula= hv.findViewById<TextView>(R.id.drHead_eula)
 
-        utv.typeface= iranBlack
-        about.typeface=iransans
-        eula.typeface = iransans
-        utv.typeface = iransans
+        utv.typeface= HelloApp.IRANSANS_BLACK
+        about.typeface=HelloApp.IRANSANS
+        eula.typeface = HelloApp.IRANSANS
+        utv.typeface = HelloApp.IRANSANS
 
         about.setOnClickListener {
             var terms = Intent(applicationContext,EULA_Activity::class.java)
@@ -334,13 +313,13 @@ class Hub : AppCompatActivity(), View.OnClickListener, NavigationView.OnNavigati
         val okBtn = dialogView.findViewById<View>(R.id.sl_change_btn) as Button
         val title = dialogView.findViewById<TextView>(R.id.sl_title)
 
-        title.typeface = iransans
-        elm.typeface = iransans
-        int.typeface = iransans
-        adv.typeface = iransans
-        fof.typeface = iransans
-        oneOone.typeface = iransans
-        okBtn.typeface = iransans
+        title.typeface = HelloApp.IRANSANS
+        elm.typeface = HelloApp.IRANSANS
+        int.typeface = HelloApp.IRANSANS
+        adv.typeface = HelloApp.IRANSANS
+        fof.typeface = HelloApp.IRANSANS
+        oneOone.typeface = HelloApp.IRANSANS
+        okBtn.typeface = HelloApp.IRANSANS
 
         fun Update(lvl:Int){
 
@@ -498,7 +477,7 @@ class Hub : AppCompatActivity(), View.OnClickListener, NavigationView.OnNavigati
                 }
 
                 if(tof_tru == 0f && tof_fls==0f && fof_tru == 0f && fof_fls==0f && adv_tru == 0f && adv_fls==0f && int_tru == 0f && int_fls==0f &&elm_tru == 0f && elm_fls==0f){
-                    noStat.typeface = iransans
+                    noStat.typeface = HelloApp.IRANSANS
                     lay_no_stat.visibility=View.VISIBLE
                     noStatBtn.setOnClickListener{
                         UserStatDialog.dismiss()
@@ -525,7 +504,7 @@ class Hub : AppCompatActivity(), View.OnClickListener, NavigationView.OnNavigati
         val dialogView = layoutInflater.inflate(R.layout.level_setting,null)
 
         val confirmBtn = dialogView.findViewById<Button>(R.id.ls_okBtn)
-        confirmBtn.typeface = iransans
+        confirmBtn.typeface = HelloApp.IRANSANS
         val numChellenge = dialogView.findViewById<View>(R.id.ls_count_challenge) as EditText
         val timeChallenge = dialogView.findViewById<View>(R.id.ls_time_for_challenge) as EditText
         val tvQuest= dialogView.findViewById<TextView>(R.id.ls_tv_quest_count)
@@ -534,7 +513,7 @@ class Hub : AppCompatActivity(), View.OnClickListener, NavigationView.OnNavigati
         val speakSwh = dialogView.findViewById<SwitchCompat>(R.id.ls_speakSwh) as SwitchCompat
 
 
-        speakLbl.typeface = iransans
+        speakLbl.typeface = HelloApp.IRANSANS
 
         speakSwh.isChecked = SPref(applicationContext,"setting")!!.getBoolean("speaker",true)
 
@@ -546,11 +525,11 @@ class Hub : AppCompatActivity(), View.OnClickListener, NavigationView.OnNavigati
             }
         }
 
-        tvQuest.setTypeface(iransans)
-        tvTimeQuest.setTypeface(iransans)
+        tvQuest.typeface = HelloApp.IRANSANS
+        tvTimeQuest.typeface = HelloApp.IRANSANS
 
-        numChellenge.typeface = iransans
-        timeChallenge.typeface = iransans
+        numChellenge.typeface = HelloApp.IRANSANS
+        timeChallenge.typeface = HelloApp.IRANSANS
 
         numChellenge.setText(NumChalleng.toString())
         timeChallenge.setText(timeOnChalleng.toString())

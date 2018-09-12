@@ -1,6 +1,7 @@
 package com.chapdast.ventures.activities
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
@@ -19,6 +20,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.chapdast.ventures.*
 import com.chapdast.ventures.Configs.*
+
 import kotlinx.android.synthetic.main.activity_quest_new.*
 import kotlinx.android.synthetic.main.new_quest_loader.*
 import kotlinx.android.synthetic.main.new_timer.*
@@ -26,7 +28,7 @@ import org.json.JSONObject
 import java.util.*
 
 
-class Quest : AppCompatActivity(), OnInitListener {
+class Quest : ChapActivity(), OnInitListener {
     var locked = false
 
     var rightAnswers = 0
@@ -40,12 +42,10 @@ class Quest : AppCompatActivity(), OnInitListener {
     var timeForEachChallenge = 20
     var trueAns: String? = null
     var qid = 0
-    var iransans: Typeface? = null
-    var bebas: Typeface? = null
     var temp: Any = ""
     var tts: TextToSpeech? = null
-    var LoadedReview: Array<MutableMap<String, String>?>? = null
-    var speaker:Boolean = true
+
+    var speaker: Boolean = true
     var handler = Handler()
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
@@ -63,15 +63,24 @@ class Quest : AppCompatActivity(), OnInitListener {
         tts!!.speak(word, TextToSpeech.QUEUE_FLUSH, null)
     }
 
+    var back = false
     override fun onBackPressed() {
-        if (tim != null) {
-            tim!!.cancel()
+        if (back) {
+            if (tim != null) {
+                tim!!.cancel()
+            }
+            if (tts != null) {
+                tts!!.stop()
+                tts!!.shutdown()
+            }
+            super.onBackPressed()
+        } else {
+            sToast(applicationContext, "برای خروج از آزمون مجددا بازگشت را لمس کنید", true)
+            back = true
+            HelloApp.HANDLER.postDelayed({
+                back = false
+            }, 1000)
         }
-        if (tts != null) {
-            tts!!.stop()
-            tts!!.shutdown()
-        }
-        super.onBackPressed()
     }
 
     override fun onDestroy() {
@@ -87,20 +96,9 @@ class Quest : AppCompatActivity(), OnInitListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_quest_new)
-        speaker = SPref(applicationContext,"setting")!!.getBoolean("speaker",true)
-        //check Internet Connection
-        if (!isNetworkAvailable(this)) {
-            var noCon = Intent(this, NoConnection::class.java)
-            startActivity(noCon)
-            finish()
-        } else {
-
-
-            var assetManager = applicationContext.assets;
-            iransans = Typeface.createFromAsset(assetManager, String.format(Locale.ENGLISH, "fonts/%s", "iransans.ttf"))
-            bebas = Typeface.createFromAsset(assetManager, String.format(Locale.ENGLISH, "fonts/%s", "bebas.otf"))
-
+        if (ChapActivity.netCheck(this)) {
+            setContentView(R.layout.activity_quest_new)
+            speaker = SPref(applicationContext, "setting")!!.getBoolean("speaker", true)
             wrongAnswers = SPref(applicationContext, "quest_stat")!!.getInt("WRONG_ANS", 0)
             rightAnswers = SPref(applicationContext, "quest_stat")!!.getInt("RIGHT_ANS", 0)
 
@@ -109,13 +107,13 @@ class Quest : AppCompatActivity(), OnInitListener {
 
             tts = TextToSpeech(this, this)
 
-            nq_first.setTypeface(iransans)
-            nq_sec.setTypeface(iransans)
-            nq_third.setTypeface(iransans)
-            nq_fourth.setTypeface(iransans)
-            nq_unknown.setTypeface(iransans)
-            nq_time.setTypeface(bebas)
-            nq_time.setTextSize(35F)
+            nq_first.typeface = HelloApp.IRANSANS
+            nq_sec.typeface = HelloApp.IRANSANS
+            nq_third.typeface = HelloApp.IRANSANS
+            nq_fourth.typeface = HelloApp.IRANSANS
+            nq_unknown.typeface = HelloApp.IRANSANS
+            nq_time.typeface = HelloApp.BEBAS_FONT
+            nq_time.textSize = 35F
 
             QuestLoader()
 
@@ -123,17 +121,33 @@ class Quest : AppCompatActivity(), OnInitListener {
                 tim?.cancel()
                 finish()
             }
-            nq_unknown.setOnClickListener { CheckAnswer(0) }
+            nq_unknown.setOnClickListener {
+                CheckAnswer(0)
+            }
 
-            nq_first.setOnClickListener { CheckAnswer(1) }
-            nq_sec.setOnClickListener { CheckAnswer(2) }
-            nq_third.setOnClickListener { CheckAnswer(3) }
-            nq_fourth.setOnClickListener { CheckAnswer(4) }
+            nq_first.setOnClickListener {
+                CheckAnswer(1)
+
+            }
+            nq_sec.setOnClickListener {
+                CheckAnswer(2)
+
+            }
+
+            nq_third.setOnClickListener {
+                CheckAnswer(3)
+
+            }
+            nq_fourth.setOnClickListener {
+                CheckAnswer(4)
+
+            }
 
         }
     }
 
     fun QuestLoader() {
+        setColor(reset = true)
         var quest = GetQuestion()
         Log.d("RESULT", quest.toString())
 
@@ -165,8 +179,8 @@ class Quest : AppCompatActivity(), OnInitListener {
                         SpeakOut(nq_question.text.toString())
                     }
                     handler.postDelayed(Runnable {
-                        if(speaker) SpeakOut(nq_question.text.toString())
-                    },200)
+                        if (speaker) SpeakOut(nq_question.text.toString())
+                    }, 200)
 
 
                     trueAns = quest.get(quest.get("ansTrue")!!)
@@ -207,7 +221,12 @@ class Quest : AppCompatActivity(), OnInitListener {
 
     fun CheckAnswer(ans: Int) {
         if (locked) {
-            sToast(applicationContext, getString(R.string.setAnswerWait), true)
+            HelloApp.HANDLER.post {
+                Runnable {
+                    sToast(applicationContext, getString(R.string.setAnswerWait), true)
+                }
+            }
+
         } else {
             locked = true
             var userAnswer: String? = null
@@ -219,9 +238,22 @@ class Quest : AppCompatActivity(), OnInitListener {
                 4 -> userAnswer = nq_fourth.text.toString()
             }
 
+
+            val rAns:Int = when (trueAns) {
+                nq_first.text.toString() -> 1
+                nq_sec.text.toString() -> 2
+                nq_third.text.toString() -> 3
+                nq_fourth.text.toString() -> 4
+                else -> {
+                    0
+                }
+            }
+            setColor(rAns)
+
             if (userAnswer == trueAns && ans != 0) {
                 //send true ans to server
 //                Toast.makeText(applicationContext, "True Answer", Toast.LENGTH_SHORT).show()
+
                 SetAnswer()
             } else {
 
@@ -235,6 +267,22 @@ class Quest : AppCompatActivity(), OnInitListener {
 
 
     }
+
+    fun setColor(ans: Int = 0, reset: Boolean = false) {
+        if (reset) {
+            linearLayout10.background = applicationContext.resources.getDrawable(R.drawable.box_white)
+            linearLayout11.background = applicationContext.resources.getDrawable(R.drawable.box_white)
+            linearLayout13.background = applicationContext.resources.getDrawable(R.drawable.box_white)
+            linearLayout14.background = applicationContext.resources.getDrawable(R.drawable.box_white)
+
+        } else {
+            linearLayout10.background = applicationContext.resources.getDrawable(if (ans == 1) R.drawable.box_green else R.drawable.box_red)
+            linearLayout11.background = applicationContext.resources.getDrawable(if (ans == 2) R.drawable.box_green else R.drawable.box_red)
+            linearLayout13.background = applicationContext.resources.getDrawable(if (ans == 3) R.drawable.box_green else R.drawable.box_red)
+            linearLayout14.background = applicationContext.resources.getDrawable(if (ans == 4) R.drawable.box_green else R.drawable.box_red)
+        }
+    }
+
 
     fun TimeControl() {
         if (timeRun) {
@@ -260,6 +308,7 @@ class Quest : AppCompatActivity(), OnInitListener {
 
     }
 
+    @SuppressLint("InflateParams")
     fun WordShow(w: String, sound: String, verb: String, noun: String) {
         val wordToCheck = w.toLowerCase()
         if (tim != null) {
@@ -267,18 +316,19 @@ class Quest : AppCompatActivity(), OnInitListener {
         }
         val wordDesc = AlertDialog.Builder(this).create()
         val dialogView = layoutInflater.inflate(R.layout.word_desc, null)
-        wordDesc.setView(dialogView)
         val word = dialogView.findViewById<View>(R.id.wd_word) as TextView
-        word.setTypeface(iransans)
         val speak = dialogView.findViewById<View>(R.id.wd_speak) as ImageView
         val verbDesc = dialogView.findViewById<View>(R.id.wd_verb_dec) as TextView
-        verbDesc.setTypeface(iransans)
         val nounDesc = dialogView.findViewById<View>(R.id.wd_noun_dec) as TextView
         val nextBtn = dialogView.findViewById<Button>(R.id.wd_next_question)
-        var moreInfo = dialogView.findViewById<Button>(R.id.wd_more_info)
+        val moreInfo = dialogView.findViewById<Button>(R.id.wd_more_info)
         val moreList = dialogView.findViewById<ListView>(R.id.wd_description)
-        nextBtn.typeface = iransans
-        moreInfo.typeface = iransans
+
+        wordDesc.setView(dialogView)
+        word.typeface = HelloApp.IRANSANS
+        verbDesc.typeface = HelloApp.IRANSANS
+        nextBtn.typeface = HelloApp.IRANSANS
+        moreInfo.typeface = HelloApp.IRANSANS
 
         moreList.visibility = View.GONE
 
@@ -291,7 +341,7 @@ class Quest : AppCompatActivity(), OnInitListener {
                 var res = nwTrans.jsonArray
 
                 var meaningList: Array<WordTransObject?> = arrayOfNulls(res.length())
-                for (i in 0..res.length() - 1) {
+                for (i in 0 until res.length() - 1) {
                     var row = res.get(i) as JSONObject
                     meaningList.set(i, WordTransObject(
                             row.getString("type"),
@@ -315,7 +365,7 @@ class Quest : AppCompatActivity(), OnInitListener {
         nextBtn.setOnClickListener {
             wordDesc.dismiss()
         }
-        nounDesc.setTypeface(iransans)
+        nounDesc.typeface = HelloApp.IRANSANS
         word.setText(w)
         speak.setOnClickListener {
             SpeakOut(sound)

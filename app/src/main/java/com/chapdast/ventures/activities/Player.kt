@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.chapdast.ventures.ChapActivity
 import com.chapdast.ventures.Configs.MEDIA_SERVER_ADDRESS
 import com.chapdast.ventures.R
 import com.chapdast.ventures.Configs.isNetworkAvailable
@@ -14,7 +15,7 @@ import com.chapdast.ventures.Configs.sToast
 import kotlinx.android.synthetic.main.activity_player.*
 import java.io.InputStream
 
-class Player : AppCompatActivity() {
+class Player : ChapActivity() {
 
     var name="Name"
     var link="link"
@@ -31,11 +32,7 @@ class Player : AppCompatActivity() {
         setContentView(R.layout.activity_player)
         //check Internet Connection
 
-        if (!isNetworkAvailable(this)) {
-            var noCon = Intent(this, NoConnection::class.java)
-            startActivity(noCon)
-            finish()
-        } else {
+        if (ChapActivity.netCheck(this)) {
             if (intent.extras!=null) {
 
                 name = intent.extras.getString("NAME")

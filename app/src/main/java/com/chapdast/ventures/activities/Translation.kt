@@ -2,50 +2,46 @@ package com.chapdast.ventures.activities
 
 import android.app.ProgressDialog
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.os.StrictMode
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
 import android.view.View
 import com.chapdast.ventures.Adapters.TranslationAdapter
+import com.chapdast.ventures.ChapActivity
 import com.chapdast.ventures.Configs.*
+import com.chapdast.ventures.HelloApp
 import com.chapdast.ventures.Objects.TranslationObject
 import com.chapdast.ventures.R
 import kotlinx.android.synthetic.main.activity_translation.*
-import java.util.*
-import kotlin.collections.ArrayList
 
-class Translation : AppCompatActivity() {
-    lateinit var iransans: Typeface
-
+class Translation : ChapActivity() {
     lateinit var translationRecyclerView: RecyclerView
     lateinit var translationAdapter: TranslationAdapter
     lateinit var translationList: ArrayList<TranslationObject>
     lateinit var viewManager: LinearLayoutManager
-    val handler = Handler()
+    private val handler = Handler()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_translation)
-        ENV.current_context=applicationContext
-        ENV.current_activity= this
+        ENV.current_context = applicationContext
+        ENV.current_activity = this
         if (!isNetworkAvailable(this)) {
             var noCon = Intent(this, NoConnection::class.java)
             startActivity(noCon)
             finish()
         }
-        var assetManager = applicationContext.assets;
-        iransans = Typeface.createFromAsset(assetManager, String.format(Locale.ENGLISH, "fonts/%s", "iransans.ttf"))
-        trns_en.setTypeface(iransans)
-        trns_en_to_fa.setTypeface(iransans)
-        trns_fa_to_en.setTypeface(iransans)
-        trns_title.setTypeface(iransans)
+        trns_en.typeface = HelloApp.IRANSANS
+        trns_en_to_fa.typeface = HelloApp.IRANSANS
+        trns_fa_to_en.typeface = HelloApp.IRANSANS
+        trns_title.typeface = HelloApp.IRANSANS
+        trns_input.typeface = HelloApp.IRANSANS
+
         trns_title.visibility = View.INVISIBLE
-        trns_input.setTypeface(iransans)
-        handler.postDelayed(Runnable {
+
+        handler.postDelayed({
             var selection = SPref(applicationContext, "translation")!!.getInt("selected", 0)
             when (selection) {
                 0 -> {
@@ -108,7 +104,8 @@ class Translation : AppCompatActivity() {
         trns_trans_btn.setOnClickListener {
             loadTrans()
             translationAdapter.notifyDataSetChanged()
-            translationRecyclerView.scrollToPosition(current++)
+            translationRecyclerView.scrollToPosition(translationList.size - 1)
+
 
         }
 
@@ -142,6 +139,8 @@ class Translation : AppCompatActivity() {
                 }
             }
             trns_input.setText("")
+
+
         } else {
             sToast(applicationContext, applicationContext.resources.getString(R.string.translateInputError))
         }

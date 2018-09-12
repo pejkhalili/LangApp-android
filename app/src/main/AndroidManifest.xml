@@ -28,12 +28,14 @@
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
 
     <application
-        android:allowBackup="true"
+        android:name=".HelloApp"
+        android:allowBackup="false"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <receiver android:name="co.ronash.pushe.receiver.UpdateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
@@ -89,9 +91,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.OnlineDictionary"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activities.Review"
             android:screenOrientation="portrait" />
         <activity
@@ -129,7 +128,8 @@
             android:name=".activities.EULA_Activity"
             android:screenOrientation="portrait" />
         <activity android:name=".activities.MediaCategories" />
-        <activity android:name=".activities.Translation"></activity>
+        <activity android:name=".activities.Translation" />
+        <activity android:name=".Handlers.NoConnectionDialog" />
     </application>
 
 </manifest>

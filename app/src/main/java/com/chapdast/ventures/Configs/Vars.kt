@@ -12,12 +12,13 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.chapdast.ventures.HelloApp
 import com.chapdast.ventures.R
 import org.json.JSONObject
 import java.util.*
 
 
-fun sToast(context: Context, toastMessage: String, isShort: Boolean = true) {
+fun sToast(context: Context=HelloApp.context, toastMessage: String, isShort: Boolean = true) {
 
     var ToastLen = if (isShort) Toast.LENGTH_SHORT else Toast.LENGTH_LONG;
     var assetManager = context.assets

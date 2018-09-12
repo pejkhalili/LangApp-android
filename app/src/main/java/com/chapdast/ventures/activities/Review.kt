@@ -28,7 +28,7 @@ import org.json.JSONObject
 import java.util.*
 
 
-class Review : AppCompatActivity(), TextToSpeech.OnInitListener {
+class Review : ChapActivity(), TextToSpeech.OnInitListener {
     var locked = false
     var timeRun = false
     var remainTime: Int = 0
@@ -37,8 +37,6 @@ class Review : AppCompatActivity(), TextToSpeech.OnInitListener {
     var ChallengeCount: Int = 20
     var timeForEachChallenge = 20
     var trueAns: String? = null
-    var qid = 0
-    var iransans: Typeface? = null
     var temp: Any = ""
     var tts: TextToSpeech? = null
     var LoadedReview: Array<MutableMap<String, String>?>? = null
@@ -48,45 +46,44 @@ class Review : AppCompatActivity(), TextToSpeech.OnInitListener {
     val handler = Handler()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_review)
-        speaker = SPref(applicationContext, "setting")!!.getBoolean("speaker", true)
+        if (ChapActivity.netCheck(this)) {
+            setContentView(R.layout.activity_review)
+            speaker = SPref(applicationContext, "setting")!!.getBoolean("speaker", true)
 
-        var net = isNetworkAvailable(this)
-        if (!net) {
-            var noCon = Intent(this, NoConnection::class.java)
-            startActivity(noCon)
-            finish()
-        } else {
-            GetQuestion()
-            var assetManager = applicationContext.assets;
-            iransans = Typeface.createFromAsset(assetManager, String.format(Locale.ENGLISH, "fonts/%s", "iransans.ttf"))
-            var bebas = Typeface.createFromAsset(assetManager, String.format(Locale.ENGLISH, "fonts/%s", "bebas.otf"))
-            timeForEachChallenge = SPref(this, "level")!!.getInt("timeOnChalleng", 20).toInt()
-            ChallengeCount = SPref(this, "level")!!.getInt("numChallenge", 20).toInt()
-            tts = TextToSpeech(applicationContext, this)
-
-            vw_ans_st.setTypeface(iransans)
-            vw_ans_nd.setTypeface(iransans)
-            vw_ans_rd.setTypeface(iransans)
-            vw_ans_th.setTypeface(iransans)
-            vw_ans_un.setTypeface(iransans)
-            vw_timer_time.setTypeface(bebas)
-            vw_timer_time.setTextSize(35F)
-
-            if (LoadedReview != null) {
-                QuestLoader()
-            } else {
-                End()
-            }
-            rv_side_menu.setOnClickListener {
-                tim?.cancel()
+            var net = isNetworkAvailable(this)
+            if (!net) {
+                var noCon = Intent(this, NoConnection::class.java)
+                startActivity(noCon)
                 finish()
+            } else {
+                GetQuestion()
+                timeForEachChallenge = SPref(this, "level")!!.getInt("timeOnChalleng", 20).toInt()
+                ChallengeCount = SPref(this, "level")!!.getInt("numChallenge", 20).toInt()
+                tts = TextToSpeech(applicationContext, this)
+
+                vw_ans_st.setTypeface(HelloApp.IRANSANS)
+                vw_ans_nd.setTypeface(HelloApp.IRANSANS)
+                vw_ans_rd.setTypeface(HelloApp.IRANSANS)
+                vw_ans_th.setTypeface(HelloApp.IRANSANS)
+                vw_ans_un.setTypeface(HelloApp.IRANSANS)
+                vw_timer_time.setTypeface(HelloApp.BEBAS_FONT)
+                vw_timer_time.setTextSize(35F)
+
+                if (LoadedReview != null) {
+                    QuestLoader()
+                } else {
+                    End()
+                }
+                rv_side_menu.setOnClickListener {
+                    tim?.cancel()
+                    finish()
+                }
+                vw_unknown.setOnClickListener { CheckAnswer(0) }
+                vw_first_answer.setOnClickListener { CheckAnswer(1) }
+                vw_second_answer.setOnClickListener { CheckAnswer(2) }
+                vw_third_answer.setOnClickListener { CheckAnswer(3) }
+                vw_fourth_answer.setOnClickListener { CheckAnswer(4) }
             }
-            vw_unknown.setOnClickListener { CheckAnswer(0) }
-            vw_first_answer.setOnClickListener { CheckAnswer(1) }
-            vw_second_answer.setOnClickListener { CheckAnswer(2) }
-            vw_third_answer.setOnClickListener { CheckAnswer(3) }
-            vw_fourth_answer.setOnClickListener { CheckAnswer(4) }
         }
     }
 
@@ -265,16 +262,16 @@ class Review : AppCompatActivity(), TextToSpeech.OnInitListener {
         val dialogView = layoutInflater.inflate(R.layout.word_desc, null)
         wordDesc.setView(dialogView)
         val word = dialogView.findViewById<View>(R.id.wd_word) as TextView
-        word.setTypeface(iransans)
+        word.setTypeface(HelloApp.IRANSANS)
         val speak = dialogView.findViewById<View>(R.id.wd_speak) as ImageView
         val verbDesc = dialogView.findViewById<View>(R.id.wd_verb_dec) as TextView
-        verbDesc.setTypeface(iransans)
+        verbDesc.setTypeface(HelloApp.IRANSANS)
         val nounDesc = dialogView.findViewById<View>(R.id.wd_noun_dec) as TextView
         val nextBtn = dialogView.findViewById<Button>(R.id.wd_next_question)
         var moreInfo = dialogView.findViewById<Button>(R.id.wd_more_info)
         val moreList = dialogView.findViewById<ListView>(R.id.wd_description)
-        nextBtn.typeface = iransans
-        moreInfo.typeface = iransans
+        nextBtn.typeface = HelloApp.IRANSANS
+        moreInfo.typeface = HelloApp.IRANSANS
 
         moreList.visibility = View.GONE
 
@@ -306,7 +303,7 @@ class Review : AppCompatActivity(), TextToSpeech.OnInitListener {
         nextBtn.setOnClickListener {
             wordDesc.dismiss()
         }
-        nounDesc.setTypeface(iransans)
+        nounDesc.setTypeface(HelloApp.IRANSANS)
         word.setText(w)
         speak.setOnClickListener {
             Toast.makeText(applicationContext, "Play Pronunciation Of $sound", Toast.LENGTH_SHORT).show()
@@ -326,13 +323,13 @@ class Review : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     fun Timer(time: Int): CountDownTimer {
-        var input = time.toLong() * 1000
+        val input = time.toLong() * 1000
 
-        var re = object : CountDownTimer(input, 1000) { // adjust the milli seconds here
+        val re = object : CountDownTimer(input, 1000) { // adjust the milli seconds here
 
             override fun onTick(millisUntilFinished: Long) {
-                var m = ((millisUntilFinished / 1000) / 60).toInt()
-                var s = ((millisUntilFinished / 1000) - (m * 60)).toInt()
+                val m = ((millisUntilFinished / 1000) / 60).toInt()
+                val s = ((millisUntilFinished / 1000) - (m * 60)).toInt()
                 if (m < 10 && s < 10) {
                     vw_timer_time.text = "0" + m + ":0" + s
                 } else if (s < 10) {
@@ -357,35 +354,35 @@ class Review : AppCompatActivity(), TextToSpeech.OnInitListener {
     fun GetQuestion() {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-        var userid = SPref(applicationContext, "userCreds")!!.getString("userId", null)
-        var level = SPref(applicationContext, "level")!!.getInt("level", 0)
-        var countQuestion = SPref(applicationContext, "level")!!.getInt("numChallenge", 20)
+        val userid = SPref(applicationContext, "userCreds")!!.getString("userId", null)
+        val level = SPref(applicationContext, "level")!!.getInt("level", 0)
+        val countQuestion = SPref(applicationContext, "level")!!.getInt("numChallenge", 20)
 
 //        var noQuest =arrayOf(mapOf<String,String>("q" to "elect","ans1" to "برتر انگاشته" ,"ans2" to "ابکی" ,"ans3" to "اب" ,"ans4" to "آفتاب","ansTrue" to "ans1"))
-        var strLevel = SRV_LEVEL_DETECTOR(level)
+        val strLevel = SRV_LEVEL_DETECTOR(level)
         if (strLevel != 0.toString()) {
 
-            var reviews = khttp.post(SERVER_ADDRESS, data = mapOf<String, Any>("m" to "review", "phone" to userid, "level" to SRV_LEVEL_DETECTOR(level).toString(), "count" to countQuestion))
+            val reviews = khttp.post(SERVER_ADDRESS, data = mapOf<String, Any>("m" to "review", "phone" to userid, "level" to SRV_LEVEL_DETECTOR(level).toString(), "count" to countQuestion))
 
             if (reviews.statusCode == 200) {
-                var result = reviews.jsonObject
+                val result = reviews.jsonObject
                 Log.d("mk", result.toString())
                 Log.d("RESU", result.toString())
                 if (result.getBoolean("result") && result.getInt("count_items") > 0) {
                     try {
 
-                        var reviewables = result.getJSONArray("items")
+                        val reviewables = result.getJSONArray("items")
 
-                        var count = reviewables.length()
+                        val count = reviewables.length()
                         Log.d("JSON", "3-->" + count)
-                        var LoadedReviews = arrayOfNulls<MutableMap<String, String>>(count)
+                        val LoadedReviews = arrayOfNulls<MutableMap<String, String>>(count)
                         var i = 0
                         while (i < count) {
-                            var jes = reviewables.getJSONObject(i)
+                            val jes = reviewables.getJSONObject(i)
 
 
                             Log.d("JSON", "4--->" + jes.getString("question").toString())
-                            var listing = RanArray()
+                            val listing = RanArray()
 
                             LoadedReviews[i] = mutableMapOf<String, String>(
                                     "res" to (if (jes.getString("quest_id") != jes.getString("question")) "true" else "false"),
@@ -419,22 +416,22 @@ class Review : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     fun SetAnswer(Answer: Boolean = true) {
 
-        var con = isNetworkAvailable(this)
+        val con = isNetworkAvailable(this)
         if (con) {
             val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
-            var userId = SPref(applicationContext, "userCreds")!!.getString("userId", 0.toString())
-            var level = SPref(applicationContext, "level")!!.getInt("level", 0)
-            var qid = SPref(applicationContext, "runReview")!!.getInt("qid", 0)
-            var ansStat = if (Answer) 1 else 2
+            val userId = SPref(applicationContext, "userCreds")!!.getString("userId", 0.toString())
+            val level = SPref(applicationContext, "level")!!.getInt("level", 0)
+            val qid = SPref(applicationContext, "runReview")!!.getInt("qid", 0)
+            val ansStat = if (Answer) 1 else 2
             if (userId != 0.toString() && level != 0 && qid != 0) {
 
-                var setAnswer = khttp.post(SERVER_ADDRESS, data = mapOf<String, String>("m" to "setanswer", "phone" to userId.toString(), "level" to SRV_LEVEL_DETECTOR(level).toString(), "qid" to qid.toString(), "ans" to ansStat.toString()))
+                val setAnswer = khttp.post(SERVER_ADDRESS, data = mapOf<String, String>("m" to "setanswer", "phone" to userId.toString(), "level" to SRV_LEVEL_DETECTOR(level).toString(), "qid" to qid.toString(), "ans" to ansStat.toString()))
                 Log.d("REQ_ANSWER", setAnswer.text)
 
                 if (setAnswer.statusCode == 200) {
                     try {
-                        var jes = setAnswer.jsonObject
+                        val jes = setAnswer.jsonObject
                         if (jes.getBoolean("result")) {
                             if (Answer) allRight++ else allWrong++
                             QuestLoader()
@@ -450,7 +447,7 @@ class Review : AppCompatActivity(), TextToSpeech.OnInitListener {
                 }
             }
         } else {
-            var noCon = Intent(this, NoConnection::class.java)
+            val noCon = Intent(this, NoConnection::class.java)
             startActivity(noCon)
             finish()
         }

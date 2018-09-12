@@ -21,23 +21,19 @@ import net.jhoobin.jhub.util.AccountUtil
 import org.json.JSONObject
 import java.util.*
 
-class Profile : AppCompatActivity() {
-    lateinit var iransans: Typeface
-    lateinit var iranBlack: Typeface
-    var userId:String? = null
+class Profile : ChapActivity() {
+
+    var userId: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
-        var net = isNetworkAvailable(this)
-        if (net) {
-            var assetManager = applicationContext.assets
-            iransans = Typeface.createFromAsset(assetManager, String.format(Locale.ENGLISH, "fonts/%s", "iransans.ttf"))
-            iranBlack = Typeface.createFromAsset(assetManager, String.format(Locale.ENGLISH, "fonts/%s", "iranblack.ttf"))
-            uInfoName.typeface = iranBlack
-            uInfoUsername.typeface = iranBlack
-            uInfoUnsub.typeface = iransans
-            uInfoNameLbl.typeface = iransans
-            uInfoUsernameLbl.typeface = iransans
+        if (ChapActivity.netCheck(this)) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_profile)
+
+            uInfoName.typeface = HelloApp.IRANSANS_BLACK
+            uInfoUsername.typeface = HelloApp.IRANSANS_BLACK
+            uInfoUnsub.typeface = HelloApp.IRANSANS
+            uInfoNameLbl.typeface = HelloApp.IRANSANS
+            uInfoUsernameLbl.typeface = HelloApp.IRANSANS
 
             userId = SPref(applicationContext, "userCreds")?.getString("userId", 0.toString())
             var userName = SPref(this, "userProfileCreds")!!.getString("userName", resources.getString(R.string.unSet))
@@ -55,10 +51,6 @@ class Profile : AppCompatActivity() {
             uInfoBackBtn.setOnClickListener {
                 finish()
             }
-        } else {
-            var noCon = Intent(this, NoConnection::class.java)
-            startActivity(noCon)
-            finish()
         }
 
     }
@@ -71,9 +63,9 @@ class Profile : AppCompatActivity() {
 
         var yesBtn = dialogView.findViewById<View>(R.id.unSUb_yes) as TextView
         var noBtn = dialogView.findViewById<View>(R.id.unSub_no) as TextView
-        text.typeface = iransans
-        yesBtn.typeface = iransans
-        noBtn.typeface = iransans
+        text.typeface = HelloApp.IRANSANS
+        yesBtn.typeface = HelloApp.IRANSANS
+        noBtn.typeface = HelloApp.IRANSANS
 
         yesBtn.setOnClickListener {
             var userId = SPref(this, "userCreds")!!.getString("userId", 0.toString())
@@ -117,14 +109,14 @@ class Profile : AppCompatActivity() {
                         sToast(applicationContext, applicationContext.resources.getString(R.string.unSubSucces), true)
                         AccountUtil.removeAccount()
                         wordDesc.dismiss()
-                        var splashPage = Intent(applicationContext,SplashPage::class.java)
+                        var splashPage = Intent(applicationContext, SplashPage::class.java)
                         startActivity(splashPage)
                         finish()
                     } else {
                         sToast(applicationContext, "UN SUCCESS")
                     }
-                }else{
-                    sToast(applicationContext, getString(R.string.cantConnectToServer),true)
+                } else {
+                    sToast(applicationContext, getString(R.string.cantConnectToServer), true)
                 }
 
 
@@ -150,15 +142,15 @@ class Profile : AppCompatActivity() {
 
         var confirmBtn = dialogView.findViewById<View>(R.id.setName_confirm) as TextView
         var inputName = dialogView.findViewById<View>(R.id.setName_name) as EditText
-        message.typeface = iransans
-        confirmBtn.typeface = iransans
-        inputName.typeface = iransans
+        message.typeface = HelloApp.IRANSANS
+        confirmBtn.typeface = HelloApp.IRANSANS
+        inputName.typeface = HelloApp.IRANSANS
 
         confirmBtn.setOnClickListener {
             if (!inputName.text.toString().isNullOrBlank()) {
                 SPref(applicationContext, "userProfileCreds")!!.edit().putString("userName", inputName.text.toString()).apply()
                 uInfoName.text = inputName.text.toString()
-                if(!userId.equals(0.toString())) {
+                if (!userId.equals(0.toString())) {
                     SetNameToServer(applicationContext, userId!!, inputName.text.toString()).execute()
                 }
                 setNameDialog.dismiss()
@@ -169,19 +161,19 @@ class Profile : AppCompatActivity() {
 
     }
 
-   inner class SetNameToServer(context:Context ,userId:String,inpName:String):AsyncTask<String,String,String>(){
-       val name = inpName
-       val userId=userId
-       val con = context
-       override fun doInBackground(vararg params: String?): String {
-           var data = mapOf<String,String>("m" to "SetName","phone" to userId,"name" to name)
-           var setname = khttp.post(SERVER_ADDRESS,data=data)
-           if(setname.statusCode ==200 ){
-                Log.d("SETNAME" , "Name Changed")
-           }
-           return "0"
-       }
+    inner class SetNameToServer(context: Context, userId: String, inpName: String) : AsyncTask<String, String, String>() {
+        val name = inpName
+        val userId = userId
+        val con = context
+        override fun doInBackground(vararg params: String?): String {
+            var data = mapOf<String, String>("m" to "SetName", "phone" to userId, "name" to name)
+            var setname = khttp.post(SERVER_ADDRESS, data = data)
+            if (setname.statusCode == 200) {
+                Log.d("SETNAME", "Name Changed")
+            }
+            return "0"
+        }
 
-   }
+    }
 
 }

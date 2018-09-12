@@ -1,30 +1,27 @@
 package com.chapdast.ventures.activities
 
 import android.app.ProgressDialog
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Typeface
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.RequiresApi
 import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.chapdast.ventures.Adapters.CategoriesAdapter
+import com.chapdast.ventures.ChapActivity
 import com.chapdast.ventures.Configs.*
-import com.chapdast.ventures.Objects.*
+import com.chapdast.ventures.HelloApp
+import com.chapdast.ventures.Objects.CategoriesMedia
 import com.chapdast.ventures.R
 import kotlinx.android.synthetic.main.activity_media_categories.*
 import org.json.JSONObject
-import java.util.*
-import kotlin.collections.ArrayList
 
-class MediaCategories : AppCompatActivity() {
-    private lateinit var iransans: Typeface
+class MediaCategories : ChapActivity() {
+
     lateinit var pg: ProgressDialog
 
     private lateinit var viewManager: RecyclerView.LayoutManager
@@ -36,50 +33,44 @@ class MediaCategories : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_media_categories)
-        if (!isNetworkAvailable(applicationContext)) {
-            var noCon = Intent(applicationContext, NoConnection::class.java)
-            startActivity(noCon)
-            finish()
-        }
+        if (ChapActivity.netCheck(this)) {
+            setContentView(R.layout.activity_media_categories)
 
-        var assetManager = applicationContext.assets
-        iransans = Typeface.createFromAsset(assetManager, String.format(Locale.ENGLISH, "fonts/%s", "iransans.ttf"))
-        ENV.current_activity = this
-        ENV.current_context = applicationContext
+            ENV.current_activity = this
+            ENV.current_context = applicationContext
 
 
-        pg = ProgressDialog(this)
+            pg = ProgressDialog(this)
 
 
-        clTopText.typeface = iransans
-        clBackBtn.setOnClickListener {
-            finish()
-        }
+            clTopText.typeface = HelloApp.IRANSANS
+            clBackBtn.setOnClickListener {
+                finish()
+            }
 
 //        val backBtn = findViewById<ImageView>(R.id.clBackBtn) as ImageView
 //        val title = findViewById<TextView>(R.id.clTopText) as TextView
 //        val topImage = findViewById<ImageView>(R.id.clTopImage) as ImageView
 
-        viewManager = LinearLayoutManager(this)
+            viewManager = LinearLayoutManager(this)
 
-        categories = ArrayList<CategoriesMedia>()
-        categoriesAdapter = CategoriesAdapter(categories, applicationContext)
-        categoriesListView = findViewById<RecyclerView>(R.id.clMediaList)
+            categories = ArrayList<CategoriesMedia>()
+            categoriesAdapter = CategoriesAdapter(categories, applicationContext)
+            categoriesListView = findViewById<RecyclerView>(R.id.clMediaList)
 
 //        categoriesListView.hasFixedSize(true)
 
-        categoriesListView.layoutManager = viewManager
+            categoriesListView.layoutManager = viewManager
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-            setupPermissions()
-        } else {
-            GetCategories().execute()
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                setupPermissions()
+            } else {
+                GetCategories().execute()
+            }
+
+            categoriesListView.adapter = categoriesAdapter
+            categoriesAdapter.notifyDataSetChanged()
         }
-
-        categoriesListView.adapter = categoriesAdapter
-        categoriesAdapter.notifyDataSetChanged()
-
     }
 
     inner class GetCategories : AsyncTask<String, String, String>() {

@@ -31,13 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TextView
-            android:visibility="invisible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="9sp"
-            android:text="verb"
-            android:layout_margin="5dp"/>
+
 
         <TextView
             android:id="@+id/wd_verb_dec"
@@ -54,13 +48,6 @@ Word Description From db" />
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TextView
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="9sp"
-            android:text="noun"
-            android:layout_margin="5dp"/>
 
         <TextView
             android:visibility="gone"

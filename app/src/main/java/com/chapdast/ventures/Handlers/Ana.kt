@@ -107,8 +107,7 @@ class Ana(context: Context) : Activity() {
             var sendReq = khttp.post(ANA_SERVER, data = data)
             if (sendReq.statusCode == 200) {
                 Log.d("RESULT-req", sendReq.jsonObject.toString())
-                var res = sendReq.jsonObject
-                return res.getBoolean("result")
+                return sendReq.jsonObject.getBoolean("result")
             }
         } catch (e: Exception) {
             Log.d("mk", e.message)

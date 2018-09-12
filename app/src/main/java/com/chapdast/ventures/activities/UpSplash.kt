@@ -18,6 +18,7 @@ import co.ronash.pushe.Pushe
 import com.chapdast.ventures.*
 import com.chapdast.ventures.Configs.*
 import com.chapdast.ventures.Handlers.Ana
+import com.chapdast.ventures.Handlers.NoConnectionDialog
 import com.google.firebase.analytics.FirebaseAnalytics
 
 import ir.mono.monolyticsdk.Monolyitcs
@@ -25,48 +26,46 @@ import ir.mono.monolyticsdk.Monolyitcs
 /**
  * Created by pejman on 6/1/18.
  */
-class UpSplash : Activity() {
+class UpSplash : ChapActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_up_splash)
         super.onCreate(savedInstanceState)
 
-        if (!isNetworkAvailable(this)) {
-            var noCon = Intent(this, NoConnection::class.java)
-            startActivity(noCon)
-            finish()
+        if (ChapActivity.netCheck(this)) {
+
+            setContentView(R.layout.activity_up_splash)
+
+            FIREBASE_CLI = FirebaseAnalytics.getInstance(applicationContext);
+            val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+            StrictMode.setThreadPolicy(policy)
+            var ana = Ana(applicationContext)
+            ana.install()
+
+            Pushe.initialize(applicationContext, false)
+            Monolyitcs.init(super.getApplication(), MonoAnaId, MonoAnaSid)
+
+            val userId = SPref(this, "userCreds")?.getString("userId", null)
+
+            Log.d("USTT", "UserId: " + userId)
+
+            var userCheck = UserCheck(userId.toString(), this).execute()
+
+            Log.d("USTT", userCheck.get().toString())
+
+            if (userId != null && userCheck.get().toString() == "0") {
+
+                var hub = Intent(this, Hub::class.java)
+                startActivity(hub)
+                finish()
+
+            } else {
+
+                var intent = Intent(this, SplashPage::class.java)
+                startActivity(intent)
+                finish()
+            }
+
         }
-
-        FIREBASE_CLI = FirebaseAnalytics.getInstance(applicationContext);
-        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-        StrictMode.setThreadPolicy(policy)
-        var ana = Ana(applicationContext)
-        ana.install()
-
-        Pushe.initialize(applicationContext, false)
-        Monolyitcs.init(super.getApplication(), MonoAnaId, MonoAnaSid)
-
-        val userId = SPref(this, "userCreds")?.getString("userId", null)
-
-        Log.d("USTT", "UserId: " + userId)
-
-        var userCheck = UserCheck(userId.toString(), this).execute()
-
-        Log.d("USTT", userCheck.get().toString())
-
-        if (userId != null && userCheck.get().toString() == "0") {
-
-            var hub = Intent(this, Hub::class.java)
-            startActivity(hub)
-            finish()
-
-        } else {
-
-            var intent = Intent(this, SplashPage::class.java)
-            startActivity(intent)
-            finish()
-        }
-
     }
 
     class UserCheck(var inp: String = "-1", var context: Context) : AsyncTask<String, String, String>() {
@@ -86,10 +85,10 @@ class UpSplash : Activity() {
             var checkUser = khttp.post(SERVER_ADDRESS, data = mapOf("m" to "checkUser", "phone" to inp))
             if (checkUser.statusCode == 200) {
                 try {
-                    var jes = checkUser.jsonObject
+                    val jes = checkUser.jsonObject
                     Log.d("uchx", jes.toString())
                     if (jes.getBoolean("result")) {
-                        var name = if (jes.getString("status").equals("sub")) {
+                        val name = if (jes.getString("status").equals("sub")) {
                             if (!jes.getString("name").equals("-")) {
                                 jes.getString("name")
                             } else {
@@ -110,16 +109,13 @@ class UpSplash : Activity() {
                 }
             } else {
 
-                var intent = Intent(context, NoConnection::class.java)
+                val intent = Intent(context, NoConnection::class.java)
                 context.startActivity(intent)
 
             }
             return 1.toString()
         }
 
-        override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
-        }
     }
 
 }

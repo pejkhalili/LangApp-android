@@ -38,20 +38,144 @@ import java.util.*
 
 
 @Suppress("DEPRECATION")
-open class SplashPage : AppCompatActivity(), View.OnClickListener {
+open class SplashPage : ChapActivity(), View.OnClickListener {
 
     val HANDELER = Handler()
     var first_time = false
     lateinit var mHelper: IabHelper
-    var iransans: Typeface? = null
-    var iranBlack: Typeface? = null
-
     var payloadJoob = "subscribe"
     lateinit var codeRecReceiver: CodeReceiver
     lateinit var fill: IntentFilter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (ChapActivity.netCheck(this)) {
+            setContentView(R.layout.activity_splash_page)
+            CharkhoneSdkApp.initSdk(applicationContext, getSecrets(), true, R.mipmap.icon)
+
+            pageDots.visibility = View.GONE
+
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                setupPermissions()
+            }
+
+            codeRecReceiver = CodeReceiver()
+
+            Log.e(PAY_TAG, "Rec Lockin")
+            fill = IntentFilter()
+            fill.addAction(smsAct)
+            applicationContext.registerReceiver(codeRecReceiver, fill)
+
+            sendBroadcast(Intent("mk.mk.mk"))
+
+            Log.e(PAY_TAG, "Rec LOCKED")
+
+
+            mHelper = IabHelper(applicationContext, RSA_KEY)
+            mHelper.enableDebugLogging(false, "$PAY_TAG-deb")
+            Log.d(PAY_TAG, mHelper.toString())
+            Log.d(PAY_TAG, "Starting setup.")
+            mHelper.startSetup(PayIabListener())
+
+
+            lb.typeface = HelloApp.IRANSANS
+            sp_two_intro.typeface = HelloApp.IRANSANS_BLACK
+            sp_three_num_box.typeface = HelloApp.IRANSANS
+            sp_three_price.typeface = HelloApp.IRANSANS
+
+            sp_four_confirm_box.typeface = HelloApp.IRANSANS
+
+
+            val elm = findViewById<View>(R.id.spf_elm) as Button
+            val int = findViewById<View>(R.id.spf_inter) as Button
+            val adv = findViewById<View>(R.id.spf_adv) as Button
+            val fof = findViewById<View>(R.id.spf_504) as Button
+            val oneOone = findViewById<View>(R.id.spf_tofel) as Button
+
+            elm.typeface = HelloApp.IRANSANS
+            int.typeface = HelloApp.IRANSANS
+            adv.typeface = HelloApp.IRANSANS
+            fof.typeface = HelloApp.IRANSANS
+            oneOone.typeface = HelloApp.IRANSANS
+
+            sp_three_num_box.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.ACTION_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+                    splash3()
+                    return@OnKeyListener true
+                }
+                false
+            })
+
+            sp_four_confirm_box.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.ACTION_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+                    splash4()
+                    return@OnKeyListener true
+                }
+                false
+            })
+
+
+            sp_one_start.setOnClickListener(this)
+            sp_two_next.setOnClickListener(this)
+            sp_two_prev.setOnClickListener(this)
+            sp_three_confirm.setOnClickListener(this)
+            sp_four_confirm.setOnClickListener(this)
+            sp_four_change_number.setOnClickListener(this)
+            sp_four_change_number.typeface = HelloApp.IRANSANS
+            sp_four_confirm.typeface = HelloApp.IRANSANS
+            sp_three_confirm.typeface = HelloApp.IRANSANS
+            sp_three_text.typeface = HelloApp.IRANSANS
+            sp_four_text.typeface = HelloApp.IRANSANS
+
+
+            elm.setOnClickListener { intenter(applicationContext, 1) }
+            int.setOnClickListener { intenter(applicationContext, 2) }
+            adv.setOnClickListener { intenter(applicationContext, 3) }
+            fof.setOnClickListener { intenter(applicationContext, 4) }
+            oneOone.setOnClickListener { intenter(applicationContext, 5) }
+        }
+    }
+
+    override fun onClick(item: View?) {
+
+        if (item != null) {
+            when (item.id) {
+
+                R.id.sp_one_start -> {
+                    splash1()
+                }
+
+                R.id.sp_two_next -> {
+                    splash2_next()
+                }
+
+                R.id.sp_two_prev -> {
+                    splash2_prev()
+                }
+
+                R.id.sp_three_confirm -> {
+                    //check Phone Number
+
+                    splash3()
+                }
+
+                R.id.sp_four_confirm -> {
+                    //check Entered RespCode With server or ...
+
+                    splash4()
+                }
+
+                R.id.sp_four_change_number -> {
+                    sp3.visibility = View.VISIBLE
+                    sp4.visibility = View.GONE
+                }
+
+            }
+        }
+    }
 
     inner class CodeReceiver : BroadcastReceiver() {
+
         override fun onReceive(p0: Context?, p1: Intent?) {
             Log.e("ACT", "ACT>>>>" + p1!!.action.toString())
             if (p1!!.action == smsAct) {
@@ -63,8 +187,8 @@ open class SplashPage : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-    }
 
+    }
 
     //joobin
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -80,7 +204,6 @@ open class SplashPage : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
-
     inner class PayIabListener : IabHelper.OnIabSetupFinishedListener {
         override fun onIabSetupFinished(result: IabResult?) {
             Log.d("$PAY_TAG-iab", result!!.message)
@@ -96,30 +219,10 @@ open class SplashPage : AppCompatActivity(), View.OnClickListener {
                 Log.e("$PAY_TAG", "Error querying inventory. Another async operation inprogress. ${e.message}")
             }
         }
-/*
-        fun mGotInventoryListener(helper: IabHelper): IabHelper.QueryInventoryFinishedListener {
-            return IabHelper.QueryInventoryFinishedListener { result, inventory ->
-                Log.d("$PAY_TAG", "Query inventory finished.")
-                // Have we been disposed of in the meantime? If so, quit.
-                if (helper == null) return@QueryInventoryFinishedListener
-                // Is it a failure?
-                if (result.isFailure) {
-                    Log.e("$PAY_TAG", "Failed to query inventory: $result")
-                    return@QueryInventoryFinishedListener
-                }
-                Log.d("$PAY_TAG", "Query inventory was successful.")
-                var skuDetails = inventory.getSkuDetails(SUK_KEY)
-                var purchase = inventory.getPurchase(SUK_KEY)
 
-                Log.i("$PAY_TAG",skuDetails.toString()  + purchase.toString());
-
-                Log.d("$PAY_TAG", "Initial inventory query finished; enabling main UI.")
-            }
-        }
-        */
     }
-
     inner class PayDown : IabHelper.OnIabPurchaseFinishedListener {
+
         override fun onIabPurchaseFinished(result: IabResult?, purchase: Purchase?) {
             Log.d("$PAY_TAG", "Purchase finished: " + result + ",\npurchase: " + purchase.toString())
             SPref(applicationContext, "purchase")!!.edit().putString("purchase", purchase.toString()).apply()
@@ -196,141 +299,32 @@ open class SplashPage : AppCompatActivity(), View.OnClickListener {
             Log.e("$PAY_TAG", "Error-->> " + e.message)
         }
     }
-
     fun getSecrets(): Array<out String>? {
         return resources.getStringArray(R.array.secrets)
     }
+    /*
+              fun mGotInventoryListener(helper: IabHelper): IabHelper.QueryInventoryFinishedListener {
+                  return IabHelper.QueryInventoryFinishedListener { result, inventory ->
+                      Log.d("$PAY_TAG", "Query inventory finished.")
+                      // Have we been disposed of in the meantime? If so, quit.
+                      if (helper == null) return@QueryInventoryFinishedListener
+                      // Is it a failure?
+                      if (result.isFailure) {
+                          Log.e("$PAY_TAG", "Failed to query inventory: $result")
+                          return@QueryInventoryFinishedListener
+                      }
+                      Log.d("$PAY_TAG", "Query inventory was successful.")
+                      var skuDetails = inventory.getSkuDetails(SUK_KEY)
+                      var purchase = inventory.getPurchase(SUK_KEY)
+
+                      Log.i("$PAY_TAG",skuDetails.toString()  + purchase.toString());
+
+                      Log.d("$PAY_TAG", "Initial inventory query finished; enabling main UI.")
+                  }
+              }
+*/
+
     //joobin
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash_page)
-        CharkhoneSdkApp.initSdk(applicationContext, getSecrets(), true, R.mipmap.icon)
-
-        pageDots.visibility = View.GONE
-
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-            setupPermissions()
-        }
-
-        codeRecReceiver = CodeReceiver()
-
-        Log.e(PAY_TAG, "Rec Lockin")
-        fill = IntentFilter()
-        fill.addAction(smsAct)
-        applicationContext.registerReceiver(codeRecReceiver, fill)
-
-        sendBroadcast(Intent("mk.mk.mk"))
-
-        Log.e(PAY_TAG, "Rec LOCKED")
-
-
-        mHelper = IabHelper(applicationContext, RSA_KEY)
-        mHelper.enableDebugLogging(false, "$PAY_TAG-deb")
-        Log.d(PAY_TAG, mHelper.toString())
-        Log.d(PAY_TAG, "Starting setup.")
-        mHelper.startSetup(PayIabListener())
-
-
-        var assetManager = applicationContext.assets
-        iransans = Typeface.createFromAsset(assetManager, String.format(Locale.ENGLISH, "fonts/%s", "iransans.ttf"))
-        iranBlack = Typeface.createFromAsset(assetManager, String.format(Locale.ENGLISH, "fonts/%s", "iranblack.ttf"))
-        lb.setTypeface(iransans)
-        sp_two_intro.setTypeface(iranBlack)
-        sp_three_num_box.setTypeface(iransans)
-        sp_three_price.setTypeface(iransans)
-
-        sp_four_confirm_box.setTypeface(iransans)
-
-
-        val elm = findViewById<View>(R.id.spf_elm) as Button
-        val int = findViewById<View>(R.id.spf_inter) as Button
-        val adv = findViewById<View>(R.id.spf_adv) as Button
-        val fof = findViewById<View>(R.id.spf_504) as Button
-        val oneOone = findViewById<View>(R.id.spf_tofel) as Button
-
-        elm.typeface = iransans
-        int.typeface = iransans
-        adv.typeface = iransans
-        fof.typeface = iransans
-        oneOone.typeface = iransans
-
-        sp_three_num_box.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.ACTION_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-                splash3()
-                return@OnKeyListener true
-            }
-            false
-        })
-
-        sp_four_confirm_box.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.ACTION_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-                splash4()
-                return@OnKeyListener true
-            }
-            false
-        })
-
-
-        sp_one_start.setOnClickListener(this)
-        sp_two_next.setOnClickListener(this)
-        sp_two_prev.setOnClickListener(this)
-        sp_three_confirm.setOnClickListener(this)
-        sp_four_confirm.setOnClickListener(this)
-        sp_four_change_number.setOnClickListener(this)
-        sp_four_change_number.typeface = iransans
-        sp_four_confirm.typeface = iransans
-        sp_three_confirm.typeface = iransans
-        sp_three_text.typeface = iransans
-        sp_four_text.typeface = iransans
-
-
-        elm.setOnClickListener { intenter(applicationContext, 1) }
-        int.setOnClickListener { intenter(applicationContext, 2) }
-        adv.setOnClickListener { intenter(applicationContext, 3) }
-        fof.setOnClickListener { intenter(applicationContext, 4) }
-        oneOone.setOnClickListener { intenter(applicationContext, 5) }
-
-    }
-
-    override fun onClick(item: View?) {
-
-        if (item != null) {
-            when (item.id) {
-
-                R.id.sp_one_start -> {
-                    splash1()
-                }
-
-                R.id.sp_two_next -> {
-                    splash2_next()
-                }
-
-                R.id.sp_two_prev -> {
-                    splash2_prev()
-                }
-
-                R.id.sp_three_confirm -> {
-                    //check Phone Number
-
-                    splash3()
-                }
-
-                R.id.sp_four_confirm -> {
-                    //check Entered RespCode With server or ...
-
-                    splash4()
-                }
-
-                R.id.sp_four_change_number -> {
-                    sp3.visibility = View.VISIBLE
-                    sp4.visibility = View.GONE
-                }
-
-            }
-        }
-    }
 
     fun splash1() {
         sp1.visibility = View.GONE
@@ -393,186 +387,184 @@ open class SplashPage : AppCompatActivity(), View.OnClickListener {
                         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
                         StrictMode.setThreadPolicy(policy)
 
-                        var sendMessage = khttp.post(SERVER_ADDRESS,data = mapOf("m" to "sendsms", "phone" to phoneNum))
+                        var sendMessage = khttp.post(SERVER_ADDRESS, data = mapOf("m" to "sendsms", "phone" to phoneNum))
 
 
-                        if(sendMessage.statusCode ==200){
+                        if (sendMessage.statusCode == 200) {
                             var jes = sendMessage.jsonObject
                             Log.i("ERR_SMS", "RSP:" + jes.toString())
-                            if(jes.getBoolean("result") && jes.getBoolean("status")){
+                            if (jes.getBoolean("result") && jes.getBoolean("status")) {
 
-                                    SPref(applicationContext, "userCreds")!!.edit().putString("activeCode", jes.getString("tid")).apply()
-                                    sp3.visibility = View.GONE
-                                    sp_four_confirm_box.setText("");
-                                    sp4.visibility = View.VISIBLE
+                                SPref(applicationContext, "userCreds")!!.edit().putString("activeCode", jes.getString("tid")).apply()
+                                sp3.visibility = View.GONE
+                                sp_four_confirm_box.setText("");
+                                sp4.visibility = View.VISIBLE
 
-                            }else{
+                            } else {
                                 Log.d("ERR_SMS", "3cant Send")
-                                sToast(applicationContext, getString(R.string.pleaseTryAgain),true)
+                                sToast(applicationContext, getString(R.string.pleaseTryAgain), true)
                             }
                         }
 
-                        } else {
-                            sToast(applicationContext, resources.getString(R.string.unSupportedNumber), false)
-                        }
-                    }
-                }
-
-
-            } else {
-                sToast(this, applicationContext.resources.getString(R.string.wrongNum))
-            }
-        }
-
-        fun splash4() {
-            var UserId = SPref(applicationContext, "userCreds")!!.getString("insertedPhone", 0.toString())
-            var PurchaseToken = SPref(this, "userCreds")!!.getString("activeCode", 0.toString()).replace("SUCCESS.", "")
-            var verfiyText = sp_four_confirm_box.text.toString()
-            Log.e(PAY_TAG, "+++++++ $PurchaseToken, $verfiyText")
-
-            if (verfiyText.length == 4 ) {
-                var ana = Ana(this)
-                ana.sub()
-                val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-                StrictMode.setThreadPolicy(policy)
-                Log.d("Err1", UserId.toString())
-                var resp = khttp.post(SERVER_ADDRESS, data = mapOf("m" to "register", "phone" to UserId, "tid" to PurchaseToken, "pin" to verfiyText))
-                Log.e("ERR_CONFI", "RSP:" + resp.text.toString())
-                if (resp.statusCode == 200) {
-                    SPref(applicationContext, "userCreds")!!.edit().putString("userId", UserId).commit() // set userid to old userId field
-                    Log.e("SET_ID", "USER SET $UserId")
-                    try {
-                        var jes = resp.jsonObject
-                        if (jes.getBoolean("result")) {
-                            intenter(applicationContext, 0, false)
-                            //send to responseble service provider
-                            sp4.visibility = View.GONE
-                            sp5.visibility = View.VISIBLE
-                            //send Request To register
-                            //Load next Page
-                        } else if (!jes.getBoolean("result")) {
-                            Log.d("Err1", jes.toString())
-                            sToast(applicationContext, getString(R.string.pleaseTryAgain),true)
-                            sp4.visibility = View.GONE
-                            sp3.visibility = View.VISIBLE
-                        }
-                    } catch (e: Exception) {
-                        sToast(applicationContext, getString(R.string.cantConnectToServer),true)
-                        Log.d("Err1", e.message)
-                    }
-                } else {
-                    sToast(applicationContext, getString(R.string.cantConnectToServer),true)
-                    Log.d("Err1", resp.statusCode.toString())
-                }
-                //send the level selection Page
-
-
-            }
-            else {
-                sToast(applicationContext, getString(R.string.code_not_match))
-            }
-        }
-
-        fun intenter(context: Context, lvl: Int, loadHub: Boolean = true) {
-            var userId = SPref(this, "userCreds")!!.getString("userId", null)
-            if (userId != null) {
-                SPref(this, "level")!!.edit().putInt("level", lvl).apply()
-                var strLevel: String? = null
-                when (lvl) {
-                    1 -> strLevel = "elementry"
-                    2 -> strLevel = "intermediate"
-                    3 -> strLevel = "advance"
-                    4 -> strLevel = "504"
-                    5 -> strLevel = "tofel"
-                    else -> strLevel = "elementry"
-                }
-//            sToast(applicationContext,"Level Set To :" + strLevel)
-                var setLevel = khttp.post(SERVER_ADDRESS, data = mapOf("m" to "setLevel", "phone" to userId, "level" to strLevel))
-                if (setLevel.statusCode == 200) {
-                    try {
-                        var res: JSONObject = setLevel.jsonObject
-                        if (res.getBoolean("result") && loadHub) {
-                            var intent = Intent(context, Hub::class.java)
-                            finish()
-                            startActivity(intent)
-                        } else {
-//                        sToast(applicationContext, "ERROR:Result" + res.getBoolean("result"))
-                        }
-                    } catch (e: Exception) {
-                        Log.d("Err", e.message)
-                    }
-
-                } else {
-//                sToast(applicationContext,"Stat:"+setLevel.statusCode)
-                }
-            } else {
-//            Toast.makeText(applicationContext,"User Id Not Found",Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        @RequiresApi(Build.VERSION_CODES.M)
-        private fun setupPermissions() {
-            val permission = applicationContext.checkSelfPermission("android.permission.RECEIVE_SMS")
-
-            if (permission != PackageManager.PERMISSION_GRANTED) {
-
-                makeRequest()
-            }
-        }
-
-        private fun makeRequest() {
-            ActivityCompat.requestPermissions(this,
-                    arrayOf("android.permission.RECEIVE_SMS", "android.permission.READ_PHONE_STATE"),
-                    SMS_REC_CODE)
-        }
-
-        override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-            when (requestCode) {
-                SMS_REC_CODE -> {
-                    if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED || grantResults[1] != PackageManager.PERMISSION_GRANTED) {
-                        Log.i("SMS_PRR", "Permission has been denied by user")
                     } else {
-                        Log.i("SMS_PRR", "Permission has been granted by user")
+                        sToast(applicationContext, resources.getString(R.string.unSupportedNumber), false)
                     }
                 }
             }
+
+
+        } else {
+            sToast(this, applicationContext.resources.getString(R.string.wrongNum))
         }
+    }
 
-        override fun onBackPressed() {
+    fun splash4() {
+        var UserId = SPref(applicationContext, "userCreds")!!.getString("insertedPhone", 0.toString())
+        var PurchaseToken = SPref(this, "userCreds")!!.getString("activeCode", 0.toString()).replace("SUCCESS.", "")
+        var verfiyText = sp_four_confirm_box.text.toString()
+        Log.e(PAY_TAG, "+++++++ $PurchaseToken, $verfiyText")
 
-            if (sp2.visibility == View.VISIBLE) {
-                sp1.visibility = View.VISIBLE
-                sp2.visibility = View.INVISIBLE
+        if (verfiyText.length == 4) {
+            var ana = Ana(this)
+            ana.sub()
+            val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+            StrictMode.setThreadPolicy(policy)
+            Log.d("Err1", UserId.toString())
+            var resp = khttp.post(SERVER_ADDRESS, data = mapOf("m" to "register", "phone" to UserId, "tid" to PurchaseToken, "pin" to verfiyText))
+            Log.e("ERR_CONFI", "RSP:" + resp.text.toString())
+            if (resp.statusCode == 200) {
+                SPref(applicationContext, "userCreds")!!.edit().putString("userId", UserId).commit() // set userid to old userId field
+                Log.e("SET_ID", "USER SET $UserId")
+                try {
+                    var jes = resp.jsonObject
+                    if (jes.getBoolean("result")) {
+                        intenter(applicationContext, 0, false)
+                        //send to responseble service provider
+                        sp4.visibility = View.GONE
+                        sp5.visibility = View.VISIBLE
+                        //send Request To register
+                        //Load next Page
+                    } else if (!jes.getBoolean("result")) {
+                        Log.d("Err1", jes.toString())
+                        sToast(applicationContext, getString(R.string.pleaseTryAgain), true)
+                        sp4.visibility = View.GONE
+                        sp3.visibility = View.VISIBLE
+                    }
+                } catch (e: Exception) {
+                    sToast(applicationContext, getString(R.string.cantConnectToServer), true)
+                    Log.d("Err1", e.message)
+                }
             } else {
-                if (first_time) {
-                    finish()
-                    finishAffinity()
-                } else {
-                    sToast(applicationContext, resources.getString(R.string.exit), true)
-                    first_time = true
-                    HANDELER.postDelayed(Runnable {
-                        first_time = false
-                    }, 2000)
+                sToast(applicationContext, getString(R.string.cantConnectToServer), true)
+                Log.d("Err1", resp.statusCode.toString())
+            }
+            //send the level selection Page
+
+
+        } else {
+            sToast(applicationContext, getString(R.string.code_not_match))
+        }
+    }
+
+    fun intenter(context: Context, lvl: Int, loadHub: Boolean = true) {
+        var userId = SPref(this, "userCreds")!!.getString("userId", null)
+        if (userId != null) {
+            SPref(this, "level")!!.edit().putInt("level", lvl).apply()
+            var strLevel: String? = null
+            when (lvl) {
+                1 -> strLevel = "elementry"
+                2 -> strLevel = "intermediate"
+                3 -> strLevel = "advance"
+                4 -> strLevel = "504"
+                5 -> strLevel = "tofel"
+                else -> strLevel = "elementry"
+            }
+//            sToast(applicationContext,"Level Set To :" + strLevel)
+            var setLevel = khttp.post(SERVER_ADDRESS, data = mapOf("m" to "setLevel", "phone" to userId, "level" to strLevel))
+            if (setLevel.statusCode == 200) {
+                try {
+                    var res: JSONObject = setLevel.jsonObject
+                    if (res.getBoolean("result") && loadHub) {
+                        var intent = Intent(context, Hub::class.java)
+                        finish()
+                        startActivity(intent)
+                    } else {
+//                        sToast(applicationContext, "ERROR:Result" + res.getBoolean("result"))
+                    }
+                } catch (e: Exception) {
+                    Log.d("Err", e.message)
                 }
 
+            } else {
+//                sToast(applicationContext,"Stat:"+setLevel.statusCode)
+            }
+        } else {
+//            Toast.makeText(applicationContext,"User Id Not Found",Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun setupPermissions() {
+        val permission = applicationContext.checkSelfPermission("android.permission.RECEIVE_SMS")
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+
+            makeRequest()
+        }
+    }
+
+    private fun makeRequest() {
+        ActivityCompat.requestPermissions(this,
+                arrayOf("android.permission.RECEIVE_SMS", "android.permission.READ_PHONE_STATE"),
+                SMS_REC_CODE)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            SMS_REC_CODE -> {
+                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED || grantResults[1] != PackageManager.PERMISSION_GRANTED) {
+                    Log.i("SMS_PRR", "Permission has been denied by user")
+                } else {
+                    Log.i("SMS_PRR", "Permission has been granted by user")
+                }
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+
+        if (sp2.visibility == View.VISIBLE) {
+            sp1.visibility = View.VISIBLE
+            sp2.visibility = View.INVISIBLE
+        } else {
+            if (first_time) {
+                finish()
+                finishAffinity()
+            } else {
+                sToast(applicationContext, resources.getString(R.string.exit), true)
+                first_time = true
+                HANDELER.postDelayed(Runnable {
+                    first_time = false
+                }, 2000)
             }
 
         }
 
+    }
 
-        override fun onDestroy() {
-            super.onDestroy()
-            Log.d("$PAY_TAG-Disp", "Destroying helper.")
-            if (mHelper != null) {
-                mHelper.disposeWhenFinished()
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("$PAY_TAG-Disp", "Destroying helper.")
+        if (mHelper != null) {
+            mHelper.disposeWhenFinished()
 //            mHelper = null;
-            }
-
-            applicationContext.unregisterReceiver(codeRecReceiver)
-
-
         }
+
+        applicationContext.unregisterReceiver(codeRecReceiver)
 
 
     }
+
+
+}
 

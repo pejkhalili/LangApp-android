@@ -3,14 +3,12 @@ package com.chapdast.ventures.activities
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Typeface
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.RequiresApi
 import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -19,24 +17,22 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ImageView
 import android.widget.TextView
-import com.chapdast.ventures.*
-import com.chapdast.ventures.Configs.*
-
-import com.chapdast.ventures.Objects.Media
 import com.chapdast.ventures.Adapters.MediaAdapter
+import com.chapdast.ventures.ChapActivity
+import com.chapdast.ventures.Configs.*
+import com.chapdast.ventures.HelloApp
+import com.chapdast.ventures.Objects.Media
 import com.chapdast.ventures.Objects.Podcast
 import com.chapdast.ventures.Objects.Video
+import com.chapdast.ventures.R
 import kotlinx.android.synthetic.main.activity_media_loader.*
 import org.json.JSONObject
-import java.util.*
-import kotlin.collections.ArrayList
 
 
-class MediaLoader : AppCompatActivity() {
+class MediaLoader : ChapActivity() {
 
     //    private var type = 0
     private var cid = 0.toString()
-    private lateinit var iransans: Typeface
     private lateinit var mediaList: ArrayList<Media>
     private lateinit var mediaListVideos: ArrayList<Media>
     private lateinit var mediaListPodcast: ArrayList<Media>
@@ -56,57 +52,56 @@ class MediaLoader : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_media_loader)
-        ENV.current_activity = this
-        ENV.current_context = applicationContext
-        if (!isNetworkAvailable(applicationContext)) {
-            var noCon = Intent(this, NoConnection::class.java)
-            startActivity(noCon)
-            finish()
-        }
+        if (ChapActivity.netCheck(this)) {
+            setContentView(R.layout.activity_media_loader)
+            ENV.current_activity = this
+            ENV.current_context = applicationContext
+            if (!isNetworkAvailable(applicationContext)) {
+                var noCon = Intent(this, NoConnection::class.java)
+                startActivity(noCon)
+                finish()
+            }
 
-        pg = ProgressDialog(this)
+            pg = ProgressDialog(this)
 
-        mlBackBtn.setOnClickListener {
-            finish()
-        }
-        var assetManager = applicationContext.assets
-        iransans = Typeface.createFromAsset(assetManager, String.format(Locale.ENGLISH, "fonts/%s", "iransans.ttf"))
-        mlTopText.setTypeface(iransans)
+            mlBackBtn.setOnClickListener {
+                finish()
+            }
+            mlTopText.typeface = HelloApp.IRANSANS
 
-        val backBtn = findViewById<ImageView>(R.id.mlBackBtn) as ImageView
-        val title = findViewById<TextView>(R.id.mlTopText) as TextView
-        val topImage = findViewById<ImageView>(R.id.mlTopImage) as ImageView
+            val backBtn = findViewById<ImageView>(R.id.mlBackBtn) as ImageView
+            val title = findViewById<TextView>(R.id.mlTopText) as TextView
+            val topImage = findViewById<ImageView>(R.id.mlTopImage) as ImageView
 
-        viewManager = LinearLayoutManager(this)
-        mediaList = ArrayList<Media>()
-        mediaListVideos = ArrayList<Media>()
-        mediaListPodcast = ArrayList<Media>()
+            viewManager = LinearLayoutManager(this)
+            mediaList = ArrayList<Media>()
+            mediaListVideos = ArrayList<Media>()
+            mediaListPodcast = ArrayList<Media>()
 
-        mediaAdapter = MediaAdapter(mediaList, this)
-        videosAdapter = MediaAdapter(mediaListVideos, this)
-        podcastAdapter = MediaAdapter(mediaListPodcast, this)
+            mediaAdapter = MediaAdapter(mediaList, this)
+            videosAdapter = MediaAdapter(mediaListVideos, this)
+            podcastAdapter = MediaAdapter(mediaListPodcast, this)
 
-        if (intent.extras != null) {
+            if (intent.extras != null) {
 //            type = intent.extras.getInt("type")
-            cid = intent.extras.getInt("id").toString()
-        }
+                cid = intent.extras.getInt("id").toString()
+            }
 //        Log.d("Media","type: $type")
 //        mlFilter.setSelection(type)
 
-        mediaListView = findViewById<RecyclerView>(R.id.mlMediaList)
-        mediaListView.setHasFixedSize(true)
-        mediaListView.layoutManager = viewManager
+            mediaListView = findViewById<RecyclerView>(R.id.mlMediaList)
+            mediaListView.setHasFixedSize(true)
+            mediaListView.layoutManager = viewManager
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-            setupPermissions()
-        } else {
-            GetMedia().execute()
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                setupPermissions()
+            } else {
+                GetMedia().execute()
+            }
+            mediaListView.adapter = mediaAdapter
+            mlFilter.onItemSelectedListener = ItemSelected()
+            mediaAdapter.notifyDataSetChanged()
         }
-        mediaListView.adapter = mediaAdapter
-        mlFilter.onItemSelectedListener = ItemSelected()
-        mediaAdapter.notifyDataSetChanged()
-
     }
 
     inner class ItemSelected : OnItemSelectedListener {
