@@ -9,7 +9,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 
 
 //Time Limit Of Number Of Quest
-val QUEST_TIME_LIMIT = 24
+val QUEST_TIME_LIMIT = 60*60*24
 
 val PAY_TAG = "mk-pay"
 //Main Server ADDRESS
