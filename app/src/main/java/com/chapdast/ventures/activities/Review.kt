@@ -463,7 +463,6 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
 
     inner class WordTransObject(type: String, meaning: String, eg: String) {
         var T = type
-
         var D = meaning
         var E = eg
     }
@@ -475,12 +474,15 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
             var type = listLay.findViewById<TextView>(R.id.trlist_type)
             var mean = listLay.findViewById<TextView>(R.id.trlist_mean)
             var eg = listLay.findViewById<TextView>(R.id.trlist_eg)
-
-            var item = getItem(p0) as WordTransObject
-            type.text = android.text.Html.fromHtml(item.T)
-            mean.text = android.text.Html.fromHtml(item.D)
-            eg.text = android.text.Html.fromHtml(item.E)
-            return listLay
+            try {
+                var item = getItem(p0) as WordTransObject
+                type.text = android.text.Html.fromHtml(item.T)
+                mean.text = android.text.Html.fromHtml(item.D)
+                eg.text = android.text.Html.fromHtml(item.E)
+            }catch (e:Exception){
+                Log.e("LIST",e.message)
+            }
+                return listLay
         }
 
         override fun getItem(p0: Int): WordTransObject? {
