@@ -54,6 +54,7 @@ class MediaLoader : ChapActivity() {
         super.onCreate(savedInstanceState)
         if (ChapActivity.netCheck(this)) {
             setContentView(R.layout.activity_media_loader)
+            mlFilter.visibility = View.GONE
             ENV.current_activity = this
             ENV.current_context = applicationContext
             if (!isNetworkAvailable(applicationContext)) {

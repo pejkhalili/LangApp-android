@@ -9,7 +9,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 
 
 //Time Limit Of Number Of Quest
-val QUEST_TIME_LIMIT = 60*60*24
+val QUEST_TIME_LIMIT = 20// 60*60*24
 
 val PAY_TAG = "mk-pay"
 //Main Server ADDRESS
@@ -17,15 +17,16 @@ val PAY_TAG = "mk-pay"
 val SERVER_ADDRESS = "http://www.cpanel9.ml/EnglishApp/sendrequest.php"
 val MEDIA_SERVER_ADDRESS = "https://www.cpanel9.ml/EnglishApp/"
 
+//Support Creds
+
+val SUPP_TELL = "02154872061"
+val SUPP_EMAIL = "info@aban.mobi"
+
 
 //Analytics Server Address
 
 val ANA_SERVER = "http://www.cpanel9.ml/EnglishApp/ana/ana.php"
 
-//SMS.ir PANEL CREDS
-
-val SMS_USER="9151000960"
-val SMS_PASS="15a738"
 val SMS_LINE_NO = "98308240"
 
 // yandex Translate

@@ -130,6 +130,10 @@
         <activity android:name=".activities.MediaCategories" />
         <activity android:name=".activities.Translation" />
         <activity android:name=".Handlers.NoConnectionDialog" />
+        <activity
+            android:name=".activities.Support"
+            android:label="@string/title_activity_support"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

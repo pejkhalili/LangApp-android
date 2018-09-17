@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -13,12 +14,13 @@
 
     <TextView
         android:id="@+id/trlist_type"
-        android:textColor="@color/INT"
-        android:layout_weight="1"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/INT"
         android:textSize="15sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        tools:text="aaaa" />
 </LinearLayout>
     <LinearLayout
         android:layout_marginStart="5dp"
@@ -28,10 +30,11 @@
 
         <TextView
             android:id="@+id/trlist_mean"
-            android:textColor="@color/mkBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            android:text="ssss"
+            android:textColor="@color/mkBlack" />
     </LinearLayout>
     <LinearLayout
         android:layout_marginStart="5dp"
@@ -40,11 +43,12 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:textColor="@color/mkBlack"
             android:id="@+id/trlist_eg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            android:text="dddd"
+            android:textColor="@color/mkBlack" />
     </LinearLayout>
 
 

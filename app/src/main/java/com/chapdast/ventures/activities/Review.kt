@@ -1,9 +1,8 @@
 package com.chapdast.ventures.activities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -15,17 +14,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.chapdast.ventures.*
+import com.chapdast.ventures.ChapActivity
 import com.chapdast.ventures.Configs.*
-
+import com.chapdast.ventures.HelloApp
+import com.chapdast.ventures.R
 import kotlinx.android.synthetic.main.activity_review.*
-import kotlinx.android.synthetic.main.new_quest_loader.*
 import kotlinx.android.synthetic.main.review_loader.*
 import kotlinx.android.synthetic.main.vw_timer.*
 import org.json.JSONException
 import org.json.JSONObject
-
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class Review : ChapActivity(), TextToSpeech.OnInitListener {
@@ -33,13 +32,13 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
     var timeRun = false
     var remainTime: Int = 0
     var tim: CountDownTimer? = null
-    var currentQuest = 0
-    var ChallengeCount: Int = 20
-    var timeForEachChallenge = 20
-    var trueAns: String? = null
+    private var currentQuest = 0
+    private var ChallengeCount: Int = 20
+    private var timeForEachChallenge = 20
+    private var trueAns: String? = null
     var temp: Any = ""
     var tts: TextToSpeech? = null
-    var LoadedReview: Array<MutableMap<String, String>?>? = null
+    private var LoadedReview: Array<MutableMap<String, String>?>? = null
     var allWrong = 0
     var allRight = 0
     var speaker: Boolean = true
@@ -50,15 +49,15 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
             setContentView(R.layout.activity_review)
             speaker = SPref(applicationContext, "setting")!!.getBoolean("speaker", true)
 
-            var net = isNetworkAvailable(this)
+            val net = isNetworkAvailable(this)
             if (!net) {
-                var noCon = Intent(this, NoConnection::class.java)
+                val noCon = Intent(this, NoConnection::class.java)
                 startActivity(noCon)
                 finish()
             } else {
                 GetQuestion()
-                timeForEachChallenge = SPref(this, "level")!!.getInt("timeOnChalleng", 20).toInt()
-                ChallengeCount = SPref(this, "level")!!.getInt("numChallenge", 20).toInt()
+                timeForEachChallenge = SPref(this, "level")!!.getInt("timeOnChalleng", 20)
+                ChallengeCount = SPref(this, "level")!!.getInt("numChallenge", 20)
                 tts = TextToSpeech(applicationContext, this)
 
                 vw_ans_st.setTypeface(HelloApp.IRANSANS)
@@ -89,7 +88,7 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            var result = tts!!.setLanguage(Locale.US)
+            val result = tts!!.setLanguage(Locale.US)
             tts!!.setPitch(1.3f)
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Log.e("TTS_SRV", "SOUND PROBLEM")
@@ -99,6 +98,7 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    @Suppress("DEPRECATION")
     fun SpeakOut(word: String) {
         tts!!.speak(word, TextToSpeech.QUEUE_FLUSH, null)
 
@@ -126,17 +126,18 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
         super.onDestroy()
     }
 
+    @SuppressLint("SetTextI18n")
     fun QuestLoader() {
         if (currentQuest <= LoadedReview!!.lastIndex) {
-            var Load = Helper(currentQuest)
-            var quest = Load
+            val Load = Helper(currentQuest)
+            val quest = Load
 
-            var resQuest = quest?.get("res").toString()
+            val resQuest = quest?.get("res").toString()
 
             if (quest != null && resQuest == "true") {
 
                 try {
-                    vw_count.setText((currentQuest!! + 1).toString() + "/" + (LoadedReview!!.lastIndex + 1).toString())
+                    vw_count.text = (currentQuest + 1).toString() + "/" + (LoadedReview!!.lastIndex + 1).toString()
 
 //                    currentQuest = currentQuest!! + 1
 
@@ -144,7 +145,7 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
 
 
 //                    sToast(applicationContext, quest.get("res").toString())
-                    var questInTitle = quest.get("q").toString().toUpperCase()
+                    val questInTitle = quest.get("q").toString().toUpperCase()
                     rv_quest_num.text = "#" + currentQuest.toString() + " " + questInTitle
 
 
@@ -160,15 +161,15 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
                     vw_all_timer_right_times.text = allRight.toString()
                     vw_all_timer_wrong_times.text = allWrong.toString()
                     vw_speak.setOnClickListener {
-                        var word = vw_word.text.toString()
+                        val word = vw_word.text.toString()
                         SpeakOut(word)
                     }
-                    handler.postDelayed(Runnable {
+                    handler.postDelayed({
                         if (speaker) SpeakOut(vw_word.text.toString())
                     }, 200)
 
 
-                    trueAns = quest.get(quest!!.get("ansTrue")!!)
+                    trueAns = quest.get(quest.get("ansTrue")!!)
                     if (tim != null) {
                         tim!!.cancel()
                     }
@@ -194,8 +195,8 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
             if (tim != null) {
                 tim!!.cancel()
             }
-            var time: Long = (Calendar.getInstance().timeInMillis / 1000).toString().toLong()
-            var intent = Intent(this, QuestFinish::class.java)
+//            var time: Long = (Calendar.getInstance().timeInMillis / 1000).toString().toLong()
+            val intent = Intent(this, QuestFinish::class.java)
             intent.putExtra("hide_RWS", true)
             startActivity(intent)
             finish()
@@ -229,11 +230,12 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
 
     }
 
+    @Suppress("DEPRECATION")
     fun TimeControl() {
         if (timeRun) {
             vw_timer_pause_btn.setImageDrawable(resources.getDrawable(R.mipmap.timer_bg))
 
-            tim = Timer(remainTime.toInt()).start()
+            tim = Timer(remainTime).start()
 
             Toast.makeText(applicationContext, "Started", Toast.LENGTH_SHORT).show()
             rv_questLoader.visibility = View.VISIBLE
@@ -241,10 +243,10 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
         } else {
             vw_timer_pause_btn.setImageDrawable(resources.getDrawable(R.mipmap.timer_bg))
             rv_questLoader.visibility = View.GONE
-            var remTime = vw_timer_time.text.toString()
-            var min = remTime.substring(0, 2).toInt()
-            var sec = remTime.substring(3, 5).toInt()
-            var r: Int = min * 60 + sec
+            val remTime = vw_timer_time.text.toString()
+            val min = remTime.substring(0, 2).toInt()
+            val sec = remTime.substring(3, 5).toInt()
+            val r: Int = min * 60 + sec
             remainTime = r
             tim?.cancel()
             Toast.makeText(applicationContext, "Paused", Toast.LENGTH_SHORT).show()
@@ -253,6 +255,7 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
 
     }
 
+    @SuppressLint("InflateParams")
     fun WordShow(w: String, sound: String, verb: String, noun: String) {
         val wordToCheck = w.toLowerCase()
         if (tim != null) {
@@ -262,13 +265,13 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
         val dialogView = layoutInflater.inflate(R.layout.word_desc, null)
         wordDesc.setView(dialogView)
         val word = dialogView.findViewById<View>(R.id.wd_word) as TextView
-        word.setTypeface(HelloApp.IRANSANS)
+        word.typeface = HelloApp.IRANSANS
         val speak = dialogView.findViewById<View>(R.id.wd_speak) as ImageView
         val verbDesc = dialogView.findViewById<View>(R.id.wd_verb_dec) as TextView
-        verbDesc.setTypeface(HelloApp.IRANSANS)
+        verbDesc.typeface = HelloApp.IRANSANS
         val nounDesc = dialogView.findViewById<View>(R.id.wd_noun_dec) as TextView
         val nextBtn = dialogView.findViewById<Button>(R.id.wd_next_question)
-        var moreInfo = dialogView.findViewById<Button>(R.id.wd_more_info)
+        val moreInfo = dialogView.findViewById<Button>(R.id.wd_more_info)
         val moreList = dialogView.findViewById<ListView>(R.id.wd_description)
         nextBtn.typeface = HelloApp.IRANSANS
         moreInfo.typeface = HelloApp.IRANSANS
@@ -278,22 +281,18 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
 
         moreInfo.setOnClickListener {
 
-            var nwTrans = khttp.get(DESC_TRANS + wordToCheck)
+            val nwTrans = khttp.get(DESC_TRANS + wordToCheck)
 
             if (nwTrans.statusCode == 200) {
-                var res = nwTrans.jsonArray
-                var meaningList: Array<WordTransObject?> = arrayOfNulls(res.length())
-                for (i in 0..res.length() - 1) {
-                    var row = res.get(i) as JSONObject
-                    meaningList.set(i, WordTransObject(
-                            row.getString("type"),
-                            row.getString("definition"),
-                            row.getString("example")
-                    )
-                    )
+                val res = nwTrans.jsonArray
+                val meaningList: ArrayList<WordTransObject?> = ArrayList(res.length())
+                for (i in 0 until res.length() ) {
+                    val row = res.get(i) as JSONObject
+                    val mean = WordTransObject(row.getString("type"),row.getString("definition"),row.getString("example"))
+                    meaningList.add(i,mean)
                 }
                 Log.d("RESULT", res.toString())
-                var adapter = listObjAdapter(applicationContext, meaningList)
+                val adapter = listObjAdapter(applicationContext, meaningList)
 
                 moreList.adapter = adapter
                 moreList.deferNotifyDataSetChanged()
@@ -303,13 +302,13 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
         nextBtn.setOnClickListener {
             wordDesc.dismiss()
         }
-        nounDesc.setTypeface(HelloApp.IRANSANS)
-        word.setText(w)
+        nounDesc.typeface = HelloApp.IRANSANS
+        word.text = w
         speak.setOnClickListener {
             Toast.makeText(applicationContext, "Play Pronunciation Of $sound", Toast.LENGTH_SHORT).show()
         }
-        verbDesc.setText(verb)
-        nounDesc.setText(noun)
+        verbDesc.text = verb
+        nounDesc.text = noun
 
         speak.setOnClickListener { SpeakOut(w) }
 
@@ -343,7 +342,7 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
 
             override fun onFinish() {
                 CheckAnswer(0)
-                vw_timer_time.setText("00:00")
+                vw_timer_time.text = "00:00"
             }
 
         }
@@ -426,7 +425,7 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
             val ansStat = if (Answer) 1 else 2
             if (userId != 0.toString() && level != 0 && qid != 0) {
 
-                val setAnswer = khttp.post(SERVER_ADDRESS, data = mapOf<String, String>("m" to "setanswer", "phone" to userId.toString(), "level" to SRV_LEVEL_DETECTOR(level).toString(), "qid" to qid.toString(), "ans" to ansStat.toString()))
+                val setAnswer = khttp.post(SERVER_ADDRESS, data = mapOf<String, String>("m" to "setanswer", "phone" to userId, "level" to SRV_LEVEL_DETECTOR(level).toString(), "qid" to qid.toString(), "ans" to ansStat.toString()))
                 Log.d("REQ_ANSWER", setAnswer.text)
 
                 if (setAnswer.statusCode == 200) {
@@ -467,26 +466,28 @@ class Review : ChapActivity(), TextToSpeech.OnInitListener {
         var E = eg
     }
 
-    inner class listObjAdapter(private val context: Context, private val dataSource: Array<WordTransObject?>) : BaseAdapter() {
+    inner class listObjAdapter(context: Context, private val dataSource: ArrayList<WordTransObject?>) : BaseAdapter() {
         private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        @Suppress("DEPRECATION")
+        @SuppressLint("ViewHolder", "InflateParams")
         override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-            var listLay = inflater.inflate(R.layout.translation_list_item, null)
-            var type = listLay.findViewById<TextView>(R.id.trlist_type)
-            var mean = listLay.findViewById<TextView>(R.id.trlist_mean)
-            var eg = listLay.findViewById<TextView>(R.id.trlist_eg)
+            val listLay = inflater.inflate(R.layout.translation_list_item, null)
+            val type = listLay.findViewById<TextView>(R.id.trlist_type)
+            val mean = listLay.findViewById<TextView>(R.id.trlist_mean)
+            val eg = listLay.findViewById<TextView>(R.id.trlist_eg)
             try {
-                var item = getItem(p0) as WordTransObject
-                type.text = android.text.Html.fromHtml(item.T)
-                mean.text = android.text.Html.fromHtml(item.D)
-                eg.text = android.text.Html.fromHtml(item.E)
-            }catch (e:Exception){
+                val item = dataSource.get(p0)
+                mean.text = android.text.Html.fromHtml("<em>Def: </em>" + item!!.D)
+                eg.text = android.text.Html.fromHtml("<em>eg.: " + item.E+"</em>")
+                type.text = android.text.Html.fromHtml( item.T)
+            }catch(e:Exception){
                 Log.e("LIST",e.message)
             }
                 return listLay
         }
 
         override fun getItem(p0: Int): WordTransObject? {
-            return dataSource!!.get(p0)
+            return dataSource.get(p0)
         }
 
         override fun getItemId(p0: Int): Long {

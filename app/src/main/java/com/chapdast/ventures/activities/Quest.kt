@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.new_quest_loader.*
 import kotlinx.android.synthetic.main.new_timer.*
 import org.json.JSONObject
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class Quest : ChapActivity(), OnInitListener {
@@ -339,19 +340,16 @@ class Quest : ChapActivity(), OnInitListener {
 
             if (nwTrans.statusCode == 200) {
                 var res = nwTrans.jsonArray
-
-                var meaningList: Array<WordTransObject?> = arrayOfNulls(res.length())
-                for (i in 0 until res.length() - 1) {
+//                Log.e("rmean", "res LEN" + res.length())
+                var meaningList: ArrayList<WordTransObject?> = ArrayList(res.length())
+                for (i in 0 until res.length()) {
                     var row = res.get(i) as JSONObject
-                    meaningList.set(i, WordTransObject(
-                            row.getString("type"),
-                            row.getString("definition"),
-                            row.getString("example")
-                    )
-                    )
+                    var mean = WordTransObject(row.getString("type"),row.getString("definition"),row.getString("example") )
+//                    Log.e("rmean", mean.toString())
+                    meaningList.add(i,mean)
                 }
 
-                Log.d("RESULT", wordToCheck + res.toString())
+                Log.e("rmean", wordToCheck +"\n"+ res.toString() +"\n"+meaningList.toString())
                 var adapter = listObjAdapter(applicationContext, meaningList)
 
                 moreList.adapter = adapter
@@ -504,20 +502,25 @@ class Quest : ChapActivity(), OnInitListener {
         var T = type
         var D = meaning
         var E = eg
+        override fun toString(): String {
+            return "WordTransObject(T='$T', D='$D', E='$E')"
+        }
+
+
     }
 
-    inner class listObjAdapter(private val context: Context, private val dataSource: Array<WordTransObject?>) : BaseAdapter() {
+    inner class listObjAdapter(private val context: Context, private val dataSource: ArrayList<WordTransObject?>) : BaseAdapter() {
         private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-            var listLay = inflater.inflate(R.layout.translation_list_item, null)
-            var type = listLay.findViewById<TextView>(R.id.trlist_type)
-            var mean = listLay.findViewById<TextView>(R.id.trlist_mean)
-            var eg = listLay.findViewById<TextView>(R.id.trlist_eg)
+            val listLay = inflater.inflate(R.layout.translation_list_item, null)
+            val type = listLay.findViewById<TextView>(R.id.trlist_type)
+            val mean = listLay.findViewById<TextView>(R.id.trlist_mean)
+            val eg = listLay.findViewById<TextView>(R.id.trlist_eg)
                 try {
-                    var item = getItem(p0) as WordTransObject
-                    type.text = android.text.Html.fromHtml(item.T)
-                    mean.text = android.text.Html.fromHtml(item.D)
-                    eg.text = android.text.Html.fromHtml(item.E)
+                    var item = dataSource.get(p0)
+                    mean.text = android.text.Html.fromHtml("<em>Def: </em>" + item!!.D)
+                    eg.text = android.text.Html.fromHtml("<em>eg.: " +item!!.E+"</em>")
+                    type.text = android.text.Html.fromHtml( item!!.T)
                 }catch(e:Exception){
                     Log.e("LIST",e.message)
                 }

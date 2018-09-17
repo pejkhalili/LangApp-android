@@ -18,12 +18,12 @@ configurations {
 
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.chapdast.ventures"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 37
+        versionCode 38
         versionName "1.2.10"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

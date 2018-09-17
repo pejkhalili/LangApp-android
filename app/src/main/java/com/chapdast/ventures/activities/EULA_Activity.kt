@@ -18,7 +18,7 @@ class EULA_Activity : ChapActivity() {
         if (ChapActivity.netCheck(this)) {
             setContentView(R.layout.activity_eula_)
             eula_back.setOnClickListener { finish() }
-            eula_back.typeface = HelloApp.IRANSANS_BLACK
+            eula_back.typeface = HelloApp.IRANSANS
             eula_text.textDirection = TextView.TEXT_DIRECTION_ANY_RTL
             eula_text.typeface = HelloApp.IRANSANS
             if (intent != null && intent.extras != null) {

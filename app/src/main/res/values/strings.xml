@@ -42,7 +42,7 @@
     <string name="select_podcast_sutitle">پادکست مورد نظر خور را انتخاب کنید</string>
     <string name="eula">شرایط استفاده</string>
     <string name="unSub">لغو اشتراک</string>
-    <string name="about">درباره</string>
+    <string name="about">درباره ما</string>
     <string name="confirm">تایید</string>
     <string name="unsub_r_u_sure">آیا از لغو اشتراک خود اطمینان دارید؟</string>
     <string name="yes">بله</string>
@@ -102,11 +102,17 @@
     <string name="translator">مترجم</string>
     <string name="noTranslationFound_fa">ترجمه ای پیدا نشد</string>
     <string name="noTranslationFound_en">No Translation</string>
+    <string name="support">پشتیبانی</string>
 
     <string-array name="mediaTypes">
         <item>همه</item>
         <item>ویدئو</item>
         <item>پادکست</item>
     </string-array>
+    <string name="title_activity_support">Support</string>
+    <string name="support_tel">شماره تماس:</string>
+    <string name="support_call_btn">تماس</string>
+    <string name="email_send_title">ارسال ایمیل به پشتیبانی هلوگرام</string>
+    <string name="supp_email_subject">پشتیبانی هلوگرام - کاربر</string>
 
 </resources>

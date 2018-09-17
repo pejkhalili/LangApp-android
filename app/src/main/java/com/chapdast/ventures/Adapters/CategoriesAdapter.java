@@ -34,11 +34,14 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         public ImageView mediaThumb;
         public TextView mediaTitle;
 
+
+
         public CatViewHolder(View itemView) {
             super(itemView);
             this.v = itemView;
             this.mediaThumb = v.findViewById(R.id.clwThumb);
             this.mediaTitle = v.findViewById(R.id.clwTitle);
+
         }
     }
 

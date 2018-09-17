@@ -2,7 +2,6 @@ package com.chapdast.ventures.activities
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.os.StrictMode
@@ -10,7 +9,6 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SwitchCompat
 import android.util.Log
 import android.view.Gravity
@@ -27,7 +25,6 @@ import kotlinx.android.synthetic.main.activity_hub.*
 import kotlinx.android.synthetic.main.app_bar_activity_home.*
 import net.jhoobin.jhub.CharkhoneSdkApp
 import org.json.JSONObject
-import java.util.*
 
 
 class Hub : ChapActivity(), View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
@@ -228,18 +225,20 @@ class Hub : ChapActivity(), View.OnClickListener, NavigationView.OnNavigationIte
         }
     }
     fun UpdateNavDrawer(userId:String?){
-        var nv = findViewById<NavigationView>(R.id.nav_view)
-        var hv = nv.getHeaderView(0)
+        val nv = findViewById<NavigationView>(R.id.nav_view)
+        val hv = nv.getHeaderView(0)
 //        var mnu = nv.menu
-        var utv = hv.findViewById<TextView>(R.id.drw_userId)
+        val utv = hv.findViewById<TextView>(R.id.drw_userId)
 //        var logo = hv.findViewById<ImageView>(R.id.drw_logo)
-        var about= hv.findViewById<TextView>(R.id.drHead_about)
-        var eula= hv.findViewById<TextView>(R.id.drHead_eula)
+        val about= hv.findViewById<TextView>(R.id.drHead_about)
+        val eula= hv.findViewById<TextView>(R.id.drHead_eula)
+        val support = hv.findViewById<TextView>(R.id.drHead_support)
 
         utv.typeface= HelloApp.IRANSANS_BLACK
         about.typeface=HelloApp.IRANSANS
         eula.typeface = HelloApp.IRANSANS
         utv.typeface = HelloApp.IRANSANS
+        support.typeface = HelloApp.IRANSANS
 
         about.setOnClickListener {
             var terms = Intent(applicationContext,EULA_Activity::class.java)
@@ -253,6 +252,11 @@ class Hub : ChapActivity(), View.OnClickListener, NavigationView.OnNavigationIte
         }
         utv.setOnClickListener {
             var intent = Intent(applicationContext, Profile::class.java)
+            startActivity(intent)
+        }
+
+        support.setOnClickListener {
+            var intent = Intent(applicationContext, Support::class.java)
             startActivity(intent)
         }
 
