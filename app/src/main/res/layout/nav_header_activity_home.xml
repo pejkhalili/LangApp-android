@@ -15,7 +15,7 @@
         android:id="@+id/drw_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="0dp"
         android:layout_weight="1"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         app:srcCompat="@mipmap/logo" />
@@ -55,18 +55,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/drHead_support"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/box"
-                android:padding="15dp"
-                android:text="@string/support"
-                android:textColor="@color/mkWhite"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/drHead_about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,6 +65,18 @@
                 android:textColor="@color/mkWhite"
                 android:textSize="15sp"
                 android:textStyle="bold" />
+            <TextView
+                android:id="@+id/drHead_support"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/box"
+                android:padding="15dp"
+                android:text="@string/support"
+                android:textColor="@color/mkWhite"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
 
         </LinearLayout>
     </ScrollView>

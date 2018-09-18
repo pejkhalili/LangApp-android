@@ -9,7 +9,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 
 
 //Time Limit Of Number Of Quest
-val QUEST_TIME_LIMIT = 20// 60*60*24
+val QUEST_TIME_LIMIT = 60*60*24
 
 val PAY_TAG = "mk-pay"
 //Main Server ADDRESS
@@ -52,4 +52,4 @@ val CAT_STRG_REQUEST_CODE = 8601
 val SMS_REC_CODE = 9880
 val IMEI_CODE = 9881
 
-var FIREBASE_CLI :FirebaseAnalytics?=null;
+var FIREBASE_CLI :FirebaseAnalytics?=null

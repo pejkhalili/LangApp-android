@@ -1,8 +1,10 @@
 package com.chapdast.ventures.activities
 
 import android.graphics.Typeface
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Html
 import android.widget.TextView
 import com.chapdast.ventures.ChapActivity
 import com.chapdast.ventures.HelloApp
@@ -20,13 +22,17 @@ class EULA_Activity : ChapActivity() {
             eula_back.setOnClickListener { finish() }
             eula_back.typeface = HelloApp.IRANSANS
             eula_text.textDirection = TextView.TEXT_DIRECTION_ANY_RTL
-            eula_text.typeface = HelloApp.IRANSANS
+//            eula_text.typeface = HelloApp.IRANSANS
+
+            eula_text.setBackgroundColor(0)
+
+
             if (intent != null && intent.extras != null) {
                 var type = intent.extras.getString("type")
                 if (type.equals("eula")) {
-                    eula_text.text = applicationContext.resources.getString(R.string.EULA_TEXT).trim()
+                    eula_text.loadUrl("file:///android_asset/html/eula.html")
                 } else {
-                    eula_text.text = applicationContext.resources.getString(R.string.ABOUT_TEXT).trim()
+                    eula_text.loadUrl("file:///android_asset/html/about.html")
                 }
             }
 
