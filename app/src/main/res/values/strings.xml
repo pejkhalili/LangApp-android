@@ -112,5 +112,6 @@
     <string name="support_call_btn">تماس</string>
     <string name="email_send_title">ارسال ایمیل به پشتیبانی هلوگرام</string>
     <string name="supp_email_subject">پشتیبانی هلوگرام - کاربر</string>
-
+    <string name="unsubIrancel">مشترک گرامی، با خروج از اپلیکیشن دسترسی شما به هلوگرام بسته و اشتراک شما در سرویس لغو خواهد شد.</string>
+    <string name="unsubMci">مشترک گرامی، خروج از اپلیکیشن به منزله لغو عضویت شما از سرویس «هلوگرام» نیست و صرفا دسترسی شما به محتوای برنامه بسته خواهد شد.</string>
 </resources>

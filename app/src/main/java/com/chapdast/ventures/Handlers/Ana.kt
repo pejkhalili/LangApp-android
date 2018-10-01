@@ -14,7 +14,7 @@ import com.chapdast.ventures.Configs.FIREBASE_CLI
 import com.chapdast.ventures.Configs.SPref
 import com.google.firebase.analytics.FirebaseAnalytics
 
-import ir.mono.monolyticsdk.Monolyitcs
+//import ir.mono.monolyticsdk.Monolyitcs
 
 
 @Suppress("DEPRECATION")
@@ -24,7 +24,7 @@ import ir.mono.monolyticsdk.Monolyitcs
  */
 class Ana(context: Context) : Activity() {
     val con = context
-    var userId: String = SPref(con.applicationContext, "userCreds")!!.getString("userId", "installl")
+
     var pm = con.packageManager.getPackageInfo(con.applicationInfo.packageName.toString(), 0)
     var ver: String = "${pm.versionName.toString()}/${pm.versionCode.toString()}"
 
@@ -42,7 +42,9 @@ class Ana(context: Context) : Activity() {
 //    var imei = tm.allCellInfo.toString()
 
     fun sub() {
+        var userId: String = SPref(con.applicationContext, "userCreds")!!.getString("userId", "first_run")
         val SUB = SPref(con, "ana")!!.getBoolean("sub", false)
+        userId = SPref(con.applicationContext, "userCreds")!!.getString("userId", "first_run")
         if (!SUB) {
             Log.d("RESULT-sub", "event to sub imei to $imei ver $ver phone $userId")
             SendApiRequest(mapOf<String, String>("event" to "sub", "imei" to imei.toString(), "ver" to ver, "phone" to userId))
@@ -51,13 +53,13 @@ class Ana(context: Context) : Activity() {
     }
 
     fun unSub(): Boolean {
-
+        var userId: String = SPref(con.applicationContext, "userCreds")!!.getString("userId", "first_run")
         Log.d("RESULT-unsub", "event to unsub imei to $imei ver $ver phone $userId")
         return SendApiRequest(mapOf<String, String>("event" to "unsub", "imei" to imei.toString(), "ver" to ver, "phone" to userId))
     }
 
     fun splash() {
-
+        var userId: String = SPref(con.applicationContext, "userCreds")!!.getString("userId", "first_run")
         val SPLASH = SPref(con, "ana")!!.getBoolean("splash", false)
         if (!SPLASH) {
             Log.d("RESULT-spl", "event to splash imei to $imei ver $ver phone $userId")
@@ -67,7 +69,7 @@ class Ana(context: Context) : Activity() {
     }
 
     fun install() {
-
+        var userId: String = SPref(con.applicationContext, "userCreds")!!.getString("userId", "first_run")
         val INSTALLED = SPref(con, "ana")!!.getBoolean("install", false)
         if (!INSTALLED) {
             Log.d("RESULT-inst", "event to Install imei to $imei ver $ver phone $userId")
@@ -77,7 +79,7 @@ class Ana(context: Context) : Activity() {
     }
 
     fun reLog(phone: String) {
-        userId = phone
+        var userId = phone
 //        val INSTALLED = SPref(con, "ana")!!.getBoolean("relogin", false)
 //        if (!INSTALLED) {
             Log.d("RESULT-relog", "event to Relogin imei to $imei ver $ver phone $userId")
@@ -87,13 +89,13 @@ class Ana(context: Context) : Activity() {
     }
 
     fun SendApiRequest(data: Map<String, String>): Boolean {
-
+        var userId: String = SPref(con.applicationContext, "userCreds")!!.getString("userId", "first_run")
         try {
             var event: String? = data.get("event")
             var cat = event
             var act = event
             var lbl = LableMaker(event!!)
-            var res = Monolyitcs.addEvent(con, cat, act, lbl, 1)
+//            var res = Monolyitcs.addEvent(con, cat, act, lbl, 1)
             if (FIREBASE_CLI != null) {
                 var bundle: Bundle = Bundle()
                 bundle.putString("userId", userId)
@@ -103,7 +105,7 @@ class Ana(context: Context) : Activity() {
                 FIREBASE_CLI!!.logEvent(event, bundle)
                 Log.i("FRIEBASE","$event on FB Called!")
             }
-            Log.d("Result_mono", res.toString())
+//            Log.d("Result_mono", res.toString())
             var sendReq = khttp.post(ANA_SERVER, data = data)
             if (sendReq.statusCode == 200) {
                 Log.d("RESULT-req", sendReq.jsonObject.toString())

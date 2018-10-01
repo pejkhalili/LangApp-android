@@ -14,18 +14,18 @@ val QUEST_TIME_LIMIT = 60*60*24
 val PAY_TAG = "mk-pay"
 //Main Server ADDRESS
 
-val SERVER_ADDRESS = "http://www.cpanel9.ml/EnglishApp/sendrequest.php"
-val MEDIA_SERVER_ADDRESS = "https://www.cpanel9.ml/EnglishApp/"
+val SERVER_ADDRESS = "https://www.hellogram.app/EnglishApp/sendrequest.php"
+val MEDIA_SERVER_ADDRESS = "https://www.hellogram.app/EnglishApp/"
 
 //Support Creds
 
-val SUPP_TELL = "02154872061"
+val SUPP_TELL = "02154872052"
 val SUPP_EMAIL = "info@aban.mobi"
 
 
 //Analytics Server Address
 
-val ANA_SERVER = "http://www.cpanel9.ml/EnglishApp/ana/ana.php"
+val ANA_SERVER = "https://www.hellogram.app/EnglishApp/ana/ana.php"
 
 val SMS_LINE_NO = "98308240"
 

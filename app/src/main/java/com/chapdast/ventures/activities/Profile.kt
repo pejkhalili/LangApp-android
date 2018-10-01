@@ -58,17 +58,24 @@ class Profile : ChapActivity() {
     fun UnSub() {
         val wordDesc = AlertDialog.Builder(this).create()
         val dialogView = layoutInflater.inflate(R.layout.unsub_alert, null, false)
+        val userId = SPref(this, "userCreds")!!.getString("userId", 0.toString())
 
         var text = dialogView.findViewById<View>(R.id.unSub_txt) as TextView
 
-        var yesBtn = dialogView.findViewById<View>(R.id.unSUb_yes) as TextView
-        var noBtn = dialogView.findViewById<View>(R.id.unSub_no) as TextView
+        val yesBtn = dialogView.findViewById<View>(R.id.unSUb_yes) as TextView
+        val noBtn = dialogView.findViewById<View>(R.id.unSub_no) as TextView
         text.typeface = HelloApp.IRANSANS
         yesBtn.typeface = HelloApp.IRANSANS
         noBtn.typeface = HelloApp.IRANSANS
+        var message = text.text.toString()+"\n"
+        if(CheckPhoneNumber(userId,0)){
+            message += applicationContext.resources.getString(R.string.unsubIrancel)
+        }else if(CheckPhoneNumber(userId,1)){
+            message += applicationContext.resources.getString(R.string.unsubMci)
+        }
 
+        text.text = message
         yesBtn.setOnClickListener {
-            var userId = SPref(this, "userCreds")!!.getString("userId", 0.toString())
 
             var data: MutableMap<String, String> = mutableMapOf("m" to "unSub", "phone" to userId)
 
@@ -111,6 +118,11 @@ class Profile : ChapActivity() {
                         wordDesc.dismiss()
                         var splashPage = Intent(applicationContext, SplashPage::class.java)
                         startActivity(splashPage)
+                        if(CheckPhoneNumber(userId,0)){
+                            sToast(applicationContext,applicationContext.resources.getString(R.string.unsubIrancel),true)
+                        }else if(CheckPhoneNumber(userId,1)){
+                            sToast(applicationContext,applicationContext.resources.getString(R.string.unsubMci),true)
+                        }
                         finish()
                     } else {
                         sToast(applicationContext, "UN SUCCESS")

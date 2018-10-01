@@ -55,17 +55,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/drHead_about"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/box"
-                android:padding="15dp"
-                android:text="@string/about"
-                android:textColor="@color/mkWhite"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-            <TextView
                 android:id="@+id/drHead_support"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,6 +62,18 @@
                 android:background="@drawable/box"
                 android:padding="15dp"
                 android:text="@string/support"
+                android:textColor="@color/mkWhite"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/drHead_about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/box"
+                android:padding="15dp"
+                android:text="@string/about"
                 android:textColor="@color/mkWhite"
                 android:textSize="15sp"
                 android:textStyle="bold" />

@@ -21,7 +21,7 @@ import com.chapdast.ventures.Handlers.Ana
 import com.chapdast.ventures.Handlers.NoConnectionDialog
 import com.google.firebase.analytics.FirebaseAnalytics
 
-import ir.mono.monolyticsdk.Monolyitcs
+//import ir.mono.monolyticsdk.Monolyitcs
 
 /**
  * Created by pejman on 6/1/18.
@@ -42,7 +42,7 @@ class UpSplash : ChapActivity() {
             ana.install()
 
             Pushe.initialize(applicationContext, false)
-            Monolyitcs.init(super.getApplication(), MonoAnaId, MonoAnaSid)
+//            Monolyitcs.init(super.getApplication(), MonoAnaId, MonoAnaSid)
 
             val userId = SPref(this, "userCreds")?.getString("userId", null)
 

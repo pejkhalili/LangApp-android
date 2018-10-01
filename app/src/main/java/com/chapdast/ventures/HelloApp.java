@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 
+import com.chapdast.ventures.Configs.VarsKt;
 import com.chapdast.ventures.Handlers.NoConnectionDialog;
 
 
@@ -19,7 +20,7 @@ public class HelloApp extends Application {
     public static Typeface IRANSANS;
     public static Typeface IRANSANS_BLACK;
     public static Typeface BEBAS_FONT;
-
+    public  static String UserId;
     @Override
     public void onCreate() {
         super.onCreate();
