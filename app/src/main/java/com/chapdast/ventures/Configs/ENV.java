@@ -8,7 +8,4 @@ public class ENV {
     public static final String SERVER_ADDRESS = EnvKt.getSERVER_ADDRESS();
     public static AppCompatActivity current_activity = null;
     public static Context current_context = null;
-
-
-
 }
