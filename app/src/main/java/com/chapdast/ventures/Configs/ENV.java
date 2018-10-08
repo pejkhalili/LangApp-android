@@ -4,8 +4,8 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
 public class ENV {
-    public static final String MEDIA_SERVER_ADDRESS = "https://www.cpanel9.ml/EnglishApp/";
-    public static final String SERVER_ADDRESS = "http://www.cpanel9.ml/EnglishApp/sendrequest.php";
+    public static final String MEDIA_SERVER_ADDRESS = EnvKt.getMEDIA_SERVER_ADDRESS();
+    public static final String SERVER_ADDRESS = EnvKt.getSERVER_ADDRESS();
     public static AppCompatActivity current_activity = null;
     public static Context current_context = null;
 

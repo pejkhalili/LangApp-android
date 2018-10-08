@@ -38,13 +38,9 @@ val DESC_TRANS = "https://owlbot.info/api/v2/dictionary/"
 val RSA_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCAOb9udhWv2o57oSCFj/Nh+SV20Fex2RuWVw0Dz4yinJQ/4RmvnKjskmWy1Y9xD9IEUEa4aa8RlD9zC1ebjGY9DcBH1TfpHFWMI7B3+ddjk2xrdnDOpHYzU/8umUG1SAujP1bbm6xHXLLVwqd5xKAVBv6h6LphDFXTQS7fgPITEwIDAQAB"
 val SUK_KEY = "ABAHEL30"
 
-val MonoAnaId="82C32856-E472-4BAA-9CFB-5E84548EFEC8"
-val MonoAnaSid="4b6b1cf0-013e-4822-bd32-3ef6b8345dbb"
-
 var smsCode=-1
 var gotSms=false
 val smsAct="mk.com.chapdast.ventures.smscode"
-
 
 // REQUEST CODES
 val STRG_REQUEST_CODE = 8600
