@@ -17,23 +17,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <include
-            android:id="@+id/sp1"
-            layout="@layout/splash_screen_one"
-            android:visibility="visible">
-
-        </include>
-
-        <include
-            android:id="@+id/sp2"
-            layout="@layout/splash_screen_two"
-            android:visibility="gone">
-
-        </include>
-
-        <include
             android:id="@+id/sp3"
             layout="@layout/splash_screen_three"
-            android:visibility="gone">
+            >
 
         </include>
 

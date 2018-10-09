@@ -116,7 +116,7 @@ class Profile : ChapActivity() {
                         sToast(applicationContext, applicationContext.resources.getString(R.string.unSubSucces), true)
                         AccountUtil.removeAccount()
                         wordDesc.dismiss()
-                        var splashPage = Intent(applicationContext, SplashPage::class.java)
+                        var splashPage = Intent(applicationContext, Welcome::class.java)
                         startActivity(splashPage)
                         if(CheckPhoneNumber(userId,0)){
                             sToast(applicationContext,applicationContext.resources.getString(R.string.unsubIrancel),true)

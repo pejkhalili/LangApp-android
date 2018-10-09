@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import com.android.billingclient.util.IabHelper
 import com.android.billingclient.util.IabResult
@@ -44,7 +45,7 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
     var first_time = false
     lateinit var mHelper: IabHelper
     var payloadJoob = "subscribe"
-    lateinit var codeRecReceiver: CodeReceiver
+        lateinit var codeRecReceiver: CodeReceiver
     lateinit var fill: IntentFilter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +53,8 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
         if (ChapActivity.netCheck(this)) {
             setContentView(R.layout.activity_splash_page)
             CharkhoneSdkApp.initSdk(applicationContext, getSecrets(), true, R.mipmap.icon)
-
+            var ANA = Ana(applicationContext)
+            ANA!!.loginPage()
             pageDots.visibility = View.GONE
 
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
@@ -79,7 +81,7 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
 
 
             lb.typeface = HelloApp.IRANSANS
-            sp_two_intro.typeface = HelloApp.IRANSANS_BLACK
+//            sp_two_intro.typeface = HelloApp.IRANSANS_BLACK
             sp_three_num_box.typeface = HelloApp.IRANSANS
             sp_three_price.typeface = HelloApp.IRANSANS
 
@@ -100,7 +102,9 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
 
             sp_three_num_box.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
                 if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.ACTION_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-                    splash3()
+//                    splash3()
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm!!.hideSoftInputFromWindow(sp_three_num_box.getWindowToken(), 0)
                     return@OnKeyListener true
                 }
                 false
@@ -108,16 +112,18 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
 
             sp_four_confirm_box.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
                 if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.ACTION_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-                    splash4()
+//                    splash4()
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(sp_four_confirm_box.getWindowToken(), 0)
                     return@OnKeyListener true
                 }
                 false
             })
 
 
-            sp_one_start.setOnClickListener(this)
-            sp_two_next.setOnClickListener(this)
-            sp_two_prev.setOnClickListener(this)
+//            sp_one_start.setOnClickListener(this)
+//            sp_two_next.setOnClickListener(this)
+//            sp_two_prev.setOnClickListener(this)
             sp_three_confirm.setOnClickListener(this)
             sp_four_confirm.setOnClickListener(this)
             sp_four_change_number.setOnClickListener(this)
@@ -140,7 +146,7 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
 
         if (item != null) {
             when (item.id) {
-
+/*
                 R.id.sp_one_start -> {
                     splash1()
                 }
@@ -152,7 +158,7 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
                 R.id.sp_two_prev -> {
                     splash2_prev()
                 }
-
+*/
                 R.id.sp_three_confirm -> {
                     //check Phone Number
 
@@ -177,12 +183,15 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
     inner class CodeReceiver : BroadcastReceiver() {
 
         override fun onReceive(p0: Context?, p1: Intent?) {
-            Log.e("ACT", "ACT>>>>" + p1!!.action.toString())
+
             if (p1!!.action == smsAct) {
-                Log.e("INCODE", "*******>>" + p1!!.getStringExtra("code"))
+
+                var tempUserId = SPref(applicationContext,"Temp")!!.getString("userId",0.toString())
                 sp_four_confirm_box.setText(p1!!.getStringExtra("code").toString())
-                Thread.sleep(1000)
-                splash4()
+                var ANA = Ana(applicationContext)
+                ANA!!.recievedCode(tempUserId)
+
+//                splash4()
 
             }
         }
@@ -204,6 +213,7 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
             }
         }
     }
+
     inner class PayIabListener : IabHelper.OnIabSetupFinishedListener {
         override fun onIabSetupFinished(result: IabResult?) {
             Log.d("$PAY_TAG-iab", result!!.message)
@@ -221,6 +231,7 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
         }
 
     }
+
     inner class PayDown : IabHelper.OnIabPurchaseFinishedListener {
 
         override fun onIabPurchaseFinished(result: IabResult?, purchase: Purchase?) {
@@ -237,8 +248,9 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
                 return
             }
 
-            var ana = Ana(applicationContext)
-            ana.sub()
+            var ANA = Ana(applicationContext)
+            var tempUserId = SPref(applicationContext,"Temp")!!.getString("userId",0.toString())
+            ANA!!.sub(tempUserId)
 
             var userId = SPref(applicationContext, "userCreds")!!.getString("insertedPhone", "null")
             val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -299,64 +311,43 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
             Log.e("$PAY_TAG", "Error-->> " + e.message)
         }
     }
+
     fun getSecrets(): Array<out String>? {
         return resources.getStringArray(R.array.secrets)
     }
-    /*
-              fun mGotInventoryListener(helper: IabHelper): IabHelper.QueryInventoryFinishedListener {
-                  return IabHelper.QueryInventoryFinishedListener { result, inventory ->
-                      Log.d("$PAY_TAG", "Query inventory finished.")
-                      // Have we been disposed of in the meantime? If so, quit.
-                      if (helper == null) return@QueryInventoryFinishedListener
-                      // Is it a failure?
-                      if (result.isFailure) {
-                          Log.e("$PAY_TAG", "Failed to query inventory: $result")
-                          return@QueryInventoryFinishedListener
-                      }
-                      Log.d("$PAY_TAG", "Query inventory was successful.")
-                      var skuDetails = inventory.getSkuDetails(SUK_KEY)
-                      var purchase = inventory.getPurchase(SUK_KEY)
 
-                      Log.i("$PAY_TAG",skuDetails.toString()  + purchase.toString());
-
-                      Log.d("$PAY_TAG", "Initial inventory query finished; enabling main UI.")
-                  }
-              }
-*/
 
     //joobin
 
-    fun splash1() {
-        sp1.visibility = View.GONE
-        sp2.visibility = View.VISIBLE
-        sp_p1.setImageDrawable(applicationContext.resources.getDrawable(R.mipmap.yellow_dot))
-        sp_p2.setImageDrawable(applicationContext.resources.getDrawable(R.mipmap.dot))
-    }
-
-    fun splash2_next() {
-        sp_three_num_box.setText(SPref(this, "userCreds")!!.getString("number", ""))
-        sp2.visibility = View.GONE
-        sp3.visibility = View.VISIBLE
-        sp_p2.setImageDrawable(applicationContext.resources.getDrawable(R.mipmap.yellow_dot))
-        sp_p3.setImageDrawable(applicationContext.resources.getDrawable(R.mipmap.dot))
-        pageDots.visibility = View.INVISIBLE
-    }
-
-    fun splash2_prev() {
-        sp2.visibility = View.GONE
-        sp1.visibility = View.VISIBLE
-        sp_p1.setImageDrawable(applicationContext.resources.getDrawable(R.mipmap.yellow_dot))
-        sp_p2.setImageDrawable(applicationContext.resources.getDrawable(R.mipmap.dot))
-    }
+//    fun splash1() {
+//        sp1.visibility = View.GONE
+//        sp2.visibility = View.VISIBLE
+//        sp_p1.setImageDrawable(applicationContext.resources.getDrawable(R.mipmap.yellow_dot))
+//        sp_p2.setImageDrawable(applicationContext.resources.getDrawable(R.mipmap.dot))
+//    }
+//
+//    fun splash2_next() {
+//        sp_three_num_box.setText(SPref(this, "userCreds")!!.getString("number", ""))
+//        sp2.visibility = View.GONE
+//        sp3.visibility = View.VISIBLE
+//        sp_p2.setImageDrawable(applicationContext.resources.getDrawable(R.mipmap.yellow_dot))
+//        sp_p3.setImageDrawable(applicationContext.resources.getDrawable(R.mipmap.dot))
+//        pageDots.visibility = View.INVISIBLE
+//    }
+//
+//    fun splash2_prev() {
+//        sp2.visibility = View.GONE
+//        sp1.visibility = View.VISIBLE
+//        sp_p1.setImageDrawable(applicationContext.resources.getDrawable(R.mipmap.yellow_dot))
+//        sp_p2.setImageDrawable(applicationContext.resources.getDrawable(R.mipmap.dot))
+//    }
 
     fun splash3() {
         var phoneNum = sp_three_num_box.text.toString()
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-        var ana = Ana(applicationContext)
-        ana.splash()
-
         if (phoneNum.length > 10) {
+
             SPref(applicationContext, "userCreds")!!.edit().putString("insertedPhone", phoneNum).apply()
 
             var getUserStatus = khttp.post(SERVER_ADDRESS, data = mapOf("m" to "checkUser", "phone" to phoneNum))
@@ -365,15 +356,19 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
                 Log.d("USTAT", getUserStatus.text.toString())
                 var jes = getUserStatus.jsonObject
                 if (jes.getBoolean("result")) {
-                    var ana = Ana(applicationContext)
+
 
                     if (jes.getString("status") == "sub") {
-                        ana.reLog(phoneNum)
+                        var ANA = Ana(applicationContext)
+                        ANA!!.reLog(phoneNum)
                     }
 
 
 
                     if (CheckPhoneNumber(phoneNum, 0)) {
+                        SPref(applicationContext, "Temp")!!.edit().putString("userId", phoneNum).commit()
+                        var ANA = Ana(applicationContext)
+                        ANA!!.requestCode(phoneNum)
                         AccountUtil.removeAccount()
                         var fillNumber = Intent()
                         fillNumber.putExtra("msisdn", phoneNum)
@@ -381,7 +376,8 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
                         fillNumber.putExtra("autoRenewing", true)
                         mHelper.setFillInIntent(fillNumber)
                         launchPay()
-                    } else if (CheckPhoneNumber(phoneNum, 1)) {
+                    }
+                    else if (CheckPhoneNumber(phoneNum, 1)) {
 
 
                         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -394,7 +390,9 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
                             var jes = sendMessage.jsonObject
                             Log.i("ERR_SMS", "RSP:" + jes.toString())
                             if (jes.getBoolean("result") && jes.getBoolean("status")) {
-
+                                var ANA = Ana(applicationContext)
+                                ANA!!.requestCode(phoneNum)
+                                SPref(applicationContext, "Temp")!!.edit().putString("userId", phoneNum).commit()
                                 SPref(applicationContext, "userCreds")!!.edit().putString("activeCode", jes.getString("tid")).apply()
                                 sp3.visibility = View.GONE
                                 sp_four_confirm_box.setText("");
@@ -403,17 +401,25 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
                             } else {
                                 Log.d("ERR_SMS", "3cant Send")
                                 sToast(applicationContext, getString(R.string.pleaseTryAgain), true)
+                                var ANA = Ana(applicationContext)
+                                ANA!!.mciFail(phoneNum)
                             }
                         }
 
-                    } else {
+                    }
+                    else {
+                        var ANA = Ana(applicationContext)
+                        ANA!!.NotSupported(phoneNum)
                         sToast(applicationContext, resources.getString(R.string.unSupportedNumber), false)
                     }
                 }
             }
 
 
-        } else {
+        }
+        else {
+            var ANA = Ana(applicationContext)
+            ANA!!.wrongNumber(phoneNum)
             sToast(this, applicationContext.resources.getString(R.string.wrongNum))
         }
     }
@@ -425,15 +431,16 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
         Log.e(PAY_TAG, "+++++++ $PurchaseToken, $verfiyText")
 
         if (verfiyText.length == 4) {
-            var ana = Ana(this)
-            ana.sub()
+            var ANA = Ana(applicationContext)
+            var tempUserId = SPref(applicationContext,"Temp")!!.getString("userId",0.toString())
+            ANA!!.sub(tempUserId)
             val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
             Log.d("Err1", UserId.toString())
             var resp = khttp.post(SERVER_ADDRESS, data = mapOf("m" to "register", "phone" to UserId, "tid" to PurchaseToken, "pin" to verfiyText))
             Log.e("ERR_CONFI", "RSP:" + resp.text.toString())
             if (resp.statusCode == 200) {
-                SPref(applicationContext, "userCreds")!!.edit().putString("userId", UserId).commit() // set userid to old userId field
+                SPref(applicationContext, "userCreds")!!.edit().putString("userId", UserId).apply() // set userid to old userId field
                 Log.e("SET_ID", "USER SET $UserId")
                 try {
                     var jes = resp.jsonObject
@@ -533,22 +540,22 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
 
     override fun onBackPressed() {
 
-        if (sp2.visibility == View.VISIBLE) {
-            sp1.visibility = View.VISIBLE
-            sp2.visibility = View.INVISIBLE
+//        if (sp2.visibility == View.VISIBLE) {
+//            sp1.visibility = View.VISIBLE
+//            sp2.visibility = View.INVISIBLE
+//        } else {
+        if (first_time) {
+            finish()
+            finishAffinity()
         } else {
-            if (first_time) {
-                finish()
-                finishAffinity()
-            } else {
-                sToast(applicationContext, resources.getString(R.string.exit), true)
-                first_time = true
-                HANDELER.postDelayed(Runnable {
-                    first_time = false
-                }, 2000)
-            }
-
+            sToast(applicationContext, resources.getString(R.string.exit), true)
+            first_time = true
+            HANDELER.postDelayed(Runnable {
+                first_time = false
+            }, 2000)
         }
+
+//        }
 
     }
 
@@ -560,10 +567,11 @@ open class SplashPage : ChapActivity(), View.OnClickListener {
 //            mHelper = null;
         }
 
-        applicationContext.unregisterReceiver(codeRecReceiver)
+//        applicationContext.unregisterReceiver(codeRecReceiver)
 
 
     }
+
 
 
 }

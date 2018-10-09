@@ -5,6 +5,7 @@ import android.content.Context
 import android.telephony.TelephonyManager
 import android.app.Activity
 import android.content.pm.PackageManager
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -41,12 +42,10 @@ class Ana(context: Context) : Activity() {
     var imei = if (perm == PackageManager.PERMISSION_GRANTED) tm.deviceId else "not_allowed"
 //    var imei = tm.allCellInfo.toString()
 
-    fun sub() {
-        var userId: String = SPref(con.applicationContext, "userCreds")!!.getString("userId", "first_run")
+    fun sub(phone:String) {
+        var userId: String = phone
         val SUB = SPref(con, "ana")!!.getBoolean("sub", false)
-        userId = SPref(con.applicationContext, "userCreds")!!.getString("userId", "first_run")
         if (!SUB) {
-            Log.d("RESULT-sub", "event to sub imei to $imei ver $ver phone $userId")
             SendApiRequest(mapOf<String, String>("event" to "sub", "imei" to imei.toString(), "ver" to ver, "phone" to userId))
             SPref(con, "ana")!!.edit().putBoolean("sub", true).apply()
         }
@@ -54,25 +53,23 @@ class Ana(context: Context) : Activity() {
 
     fun unSub(): Boolean {
         var userId: String = SPref(con.applicationContext, "userCreds")!!.getString("userId", "first_run")
-        Log.d("RESULT-unsub", "event to unsub imei to $imei ver $ver phone $userId")
         return SendApiRequest(mapOf<String, String>("event" to "unsub", "imei" to imei.toString(), "ver" to ver, "phone" to userId))
     }
 
-    fun splash() {
+    fun splash(pos:Int) {
         var userId: String = SPref(con.applicationContext, "userCreds")!!.getString("userId", "first_run")
-        val SPLASH = SPref(con, "ana")!!.getBoolean("splash", false)
+        val SPLASH = SPref(con, "ana")!!.getBoolean("splash$pos", false)
         if (!SPLASH) {
-            Log.d("RESULT-spl", "event to splash imei to $imei ver $ver phone $userId")
-            SendApiRequest(mapOf<String, String>("event" to "splash", "imei" to imei.toString(), "ver" to ver))
-            SPref(con, "ana")!!.edit().putBoolean("splash", true).apply()
+
+            SendApiRequest(mapOf<String, String>("event" to "splash$pos", "imei" to imei.toString(), "ver" to ver))
+            SPref(con, "ana")!!.edit().putBoolean("splash$pos", true).apply()
         }
     }
 
     fun install() {
-        var userId: String = SPref(con.applicationContext, "userCreds")!!.getString("userId", "first_run")
+        var userId: String = "first_run"
         val INSTALLED = SPref(con, "ana")!!.getBoolean("install", false)
         if (!INSTALLED) {
-            Log.d("RESULT-inst", "event to Install imei to $imei ver $ver phone $userId")
             SendApiRequest(mapOf<String, String>("event" to "install", "imei" to imei.toString(), "ver" to ver))
             SPref(con, "ana")!!.edit().putBoolean("install", true).apply()
         }
@@ -80,61 +77,79 @@ class Ana(context: Context) : Activity() {
 
     fun reLog(phone: String) {
         var userId = phone
-//        val INSTALLED = SPref(con, "ana")!!.getBoolean("relogin", false)
-//        if (!INSTALLED) {
-            Log.d("RESULT-relog", "event to Relogin imei to $imei ver $ver phone $userId")
             SendApiRequest(mapOf<String, String>("event" to "relogin", "imei" to imei.toString(), "ver" to ver, "phone" to userId))
-            SPref(con, "ana")!!.edit().putBoolean("install", true).apply()
-//        }
+            SPref(con, "ana")!!.edit().putBoolean("relog", true).apply()
     }
+
+    fun recievedCode(phone: String) {
+        var userId = phone
+        SendApiRequest(mapOf<String, String>("event" to "recievedCode", "imei" to imei.toString(), "ver" to ver, "phone" to userId))
+    }
+
+    fun requestCode(phone: String) {
+        var userId = phone
+        SendApiRequest(mapOf<String, String>("event" to "requestCode", "imei" to imei.toString(), "ver" to ver, "phone" to userId))
+    }
+
+
+    fun wrongNumber(phone: String) {
+        var userId = phone
+        SendApiRequest(mapOf<String, String>("event" to "wrongNumber", "imei" to imei.toString(), "ver" to ver, "phone" to userId))
+    }
+
+    fun mciFail(phone: String) {
+        var userId = phone
+        SendApiRequest(mapOf<String, String>("event" to "mciFail", "imei" to imei.toString(), "ver" to ver, "phone" to userId))
+    }
+
+    fun NotSupported(phone: String) {
+        var userId = phone
+        SendApiRequest(mapOf<String, String>("event" to "NotSupported", "imei" to imei.toString(), "ver" to ver, "phone" to userId))
+    }
+    fun loginPage() {
+        SendApiRequest(mapOf<String, String>("event" to "LoginPage", "imei" to imei.toString(), "ver" to ver,"phone" to "first_run"))
+    }
+
 
     fun SendApiRequest(data: Map<String, String>): Boolean {
         var userId: String = SPref(con.applicationContext, "userCreds")!!.getString("userId", "first_run")
-        try {
+        var sendApiRequest = SendApiRequestAsync(data,userId)
+        sendApiRequest.execute()
+        return sendApiRequest.get()
+    }
+
+
+
+    inner class SendApiRequestAsync(data:Map<String,String> ,userId:String):AsyncTask<String,Int,Boolean>(){
+        var data= data
+        var userId=userId
+        override fun doInBackground(vararg params: String?): Boolean {
             var event: String? = data.get("event")
-            var cat = event
-            var act = event
-            var lbl = LableMaker(event!!)
-//            var res = Monolyitcs.addEvent(con, cat, act, lbl, 1)
+
             if (FIREBASE_CLI != null) {
                 var bundle: Bundle = Bundle()
                 bundle.putString("userId", userId)
                 bundle.putString("version", ver)
                 bundle.putString("deviceId", imei)
                 bundle.putString("event", event)
-                FIREBASE_CLI!!.logEvent(event, bundle)
+                FIREBASE_CLI!!.logEvent(event!!, bundle)
                 Log.i("FRIEBASE","$event on FB Called!")
             }
-//            Log.d("Result_mono", res.toString())
+
             var sendReq = khttp.post(ANA_SERVER, data = data)
             if (sendReq.statusCode == 200) {
-                Log.d("RESULT-req", sendReq.jsonObject.toString())
-                return sendReq.jsonObject.getBoolean("result")
-            }
-        } catch (e: Exception) {
-            Log.d("mk", e.message)
-//            SendApiRequest(data)
-        }
-        return false
-    }
 
-    fun LableMaker(event: String): String {
-        when (event) {
-            "sub" -> {
-                return "Subscribe"
+                try {
+                    var jObj = sendReq.jsonObject
+                    Log.e("ANA", "$event >> $imei >> $ver >> $userId >> Res: $jObj >> Data: $data")
+                    return true
+                } catch (e: Exception) {
+                    Log.e("ANA", "$event >> $imei >> $ver >> $userId >> Res: ${e.message} >> Data: $data")
+                }
             }
-            "unsub" -> {
-                return "Unsubscribe"
-            }
-            "install" -> {
-                return "Install"
-            }
-            "splash" -> {
-                return "Splash"
-            }
+            return false
         }
-        return "notSpec"
-    }
 
+    }
 
 }

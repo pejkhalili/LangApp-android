@@ -60,7 +60,7 @@ class UpSplash : ChapActivity() {
 
             } else {
 
-                var intent = Intent(this, SplashPage::class.java)
+                var intent = Intent(this, Welcome::class.java)
                 startActivity(intent)
                 finish()
             }

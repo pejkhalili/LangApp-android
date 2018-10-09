@@ -133,7 +133,8 @@
         <activity
             android:name=".activities.Support"
             android:label="@string/title_activity_support"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.Welcome" />
     </application>
 
 </manifest>
